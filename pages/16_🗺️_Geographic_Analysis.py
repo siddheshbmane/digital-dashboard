@@ -59,109 +59,156 @@ with st.spinner("Fetching Geographic Data from Google Ads..."):
     
     # Fetch Data
     geo_data = connector.get_geo_data(start_date, end_date)
+    age_data = connector.get_age_range_data(start_date, end_date)
+    gender_data = connector.get_gender_data(start_date, end_date)
 
-if geo_data.empty:
-    st.info("No geographic data available for the selected period.")
+if geo_data.empty and age_data.empty and gender_data.empty:
+    st.info("No data available for the selected period.")
     st.stop()
 
-# --- Calculations ---
-# Ensure numeric columns
-cols_to_numeric = ['Impressions', 'Clicks', 'Spend', 'Conversions', 'ConversionValue']
-for col in cols_to_numeric:
-    if col in geo_data.columns:
-        geo_data[col] = pd.to_numeric(geo_data[col], errors='coerce').fillna(0)
+# --- Calculations & Helper Functions ---
+def process_data(df, group_col):
+    if df.empty:
+        return df
+    
+    # Ensure numeric columns
+    cols_to_numeric = ['Impressions', 'Clicks', 'Spend', 'Conversions', 'ConversionValue']
+    for col in cols_to_numeric:
+        if col in df.columns:
+            df[col] = pd.to_numeric(df[col], errors='coerce').fillna(0)
+        else:
+            df[col] = 0.0 # Ensure column exists to prevent KeyError
 
-# Metrics
-total_impressions = geo_data['Impressions'].sum()
-total_clicks = geo_data['Clicks'].sum()
-total_spend = geo_data['Spend'].sum()
-total_conversions = geo_data['Conversions'].sum() if 'Conversions' in geo_data.columns else 0
-total_revenue = geo_data['ConversionValue'].sum() if 'ConversionValue' in geo_data.columns else 0
+    # Calculated Columns
+    df['CTR'] = (df['Clicks'] / df['Impressions'] * 100).fillna(0)
+    df['CPC'] = (df['Spend'] / df['Clicks']).replace([float('inf')], 0).fillna(0)
+    df['CPA'] = (df['Spend'] / df['Conversions']).replace([float('inf')], 0).fillna(0)
+    df['ROAS'] = (df['ConversionValue'] / df['Spend'] * 100).replace([float('inf')], 0).fillna(0)
+    
+    return df
 
-avg_ctr = (total_clicks / total_impressions * 100) if total_impressions > 0 else 0
-avg_cpc = (total_spend / total_clicks) if total_clicks > 0 else 0
-avg_cpa = (total_spend / total_conversions) if total_conversions > 0 else 0
-roas = (total_revenue / total_spend * 100) if total_spend > 0 else 0
+# Process all dataframes
+geo_data = process_data(geo_data, 'Location')
+age_data = process_data(age_data, 'Age Range')
+gender_data = process_data(gender_data, 'Gender')
 
-# Calculated Columns
-geo_data['CTR'] = (geo_data['Clicks'] / geo_data['Impressions'] * 100).fillna(0)
-geo_data['CPC'] = (geo_data['Spend'] / geo_data['Clicks']).replace([float('inf')], 0).fillna(0)
-if 'Conversions' in geo_data.columns:
-    geo_data['CPA'] = (geo_data['Spend'] / geo_data['Conversions']).replace([float('inf')], 0).fillna(0)
-    geo_data['ROAS'] = (geo_data['ConversionValue'] / geo_data['Spend'] * 100).replace([float('inf')], 0).fillna(0)
-else:
-    geo_data['CPA'] = 0
-    geo_data['ROAS'] = 0
+# --- Geographic Performance ---
+st.header("🌍 Location Performance")
 
-# --- UI Layout ---
+if not geo_data.empty:
+    # Metrics
+    total_impressions = geo_data['Impressions'].sum()
+    total_clicks = geo_data['Clicks'].sum()
+    total_spend = geo_data['Spend'].sum()
+    total_conversions = geo_data['Conversions'].sum()
+    total_revenue = geo_data['ConversionValue'].sum()
 
-# 1. Top Metrics
-m1, m2, m3, m4 = st.columns(4)
-m1.metric("Total Spend", format_currency(total_spend))
-m2.metric("Total Conversions", int(total_conversions))
-m3.metric("Avg CPA", format_currency(avg_cpa))
-m4.metric("ROAS", f"{roas:.0f}%")
+    m1, m2, m3, m4 = st.columns(4)
+    m1.metric("Total Spend", format_currency(total_spend))
+    m2.metric("Total Conversions", int(total_conversions))
+    m3.metric("Total Revenue", format_currency(total_revenue))
+    m4.metric("ROAS", f"{(total_revenue/total_spend*100 if total_spend > 0 else 0):.0f}%")
 
-m5, m6, m7, m8 = st.columns(4)
-m5.metric("Impressions", f"{int(total_impressions):,}")
-m6.metric("Clicks", f"{int(total_clicks):,}")
-m7.metric("CTR", f"{avg_ctr:.2f}%")
-m8.metric("Avg CPC", format_currency(avg_cpc))
+    # Charts
+    c1, c2 = st.columns(2)
+    with c1:
+        st.subheader("Top Locations by Spend")
+        top_spend = geo_data.sort_values('Spend', ascending=False).head(10)
+        fig_spend = px.bar(top_spend, x='Spend', y='Location', orientation='h', title="Top Locations by Spend", text_auto='.2s')
+        fig_spend.update_layout(yaxis={'categoryorder':'total ascending'})
+        st.plotly_chart(fig_spend, use_container_width=True)
 
-st.markdown("---")
-
-# 2. Charts
-c1, c2 = st.columns(2)
-
-with c1:
-    st.subheader("Top Locations by Spend")
-    top_spend = geo_data.sort_values('Spend', ascending=False).head(10)
-    fig_spend = px.bar(top_spend, x='Spend', y='Location', orientation='h', title="Top Locations by Spend", text_auto='.2s')
-    fig_spend.update_layout(yaxis={'categoryorder':'total ascending'})
-    st.plotly_chart(fig_spend, use_container_width=True)
-
-with c2:
-    st.subheader("Top Locations by Conversions")
-    if total_conversions > 0:
+    with c2:
+        st.subheader("Top Locations by Conversions")
         top_conv = geo_data.sort_values('Conversions', ascending=False).head(10)
         fig_conv = px.bar(top_conv, x='Conversions', y='Location', orientation='h', title="Top Locations by Conversions", text_auto=True)
         fig_conv.update_layout(yaxis={'categoryorder':'total ascending'})
         st.plotly_chart(fig_conv, use_container_width=True)
-    else:
-        st.info("No conversions to display.")
 
-# 3. Map / Distribution (Simulated with Pie for now as we don't have lat/long easily)
-st.subheader("Spend Distribution by Location")
-fig_pie = px.pie(geo_data.head(15), values='Spend', names='Location', title="Spend Share by Top 15 Locations", hole=0.4)
-st.plotly_chart(fig_pie, use_container_width=True)
+    # Detailed Table
+    with st.expander("View Detailed Geographic Data"):
+        display_df = geo_data.copy()
+        display_df['Spend'] = display_df['Spend'].apply(format_currency)
+        display_df['CPC'] = display_df['CPC'].apply(format_currency)
+        display_df['CPA'] = display_df['CPA'].apply(format_currency)
+        display_df['Revenue'] = display_df['ConversionValue'].apply(format_currency)
+        display_df['CTR'] = display_df['CTR'].map('{:.2f}%'.format)
+        display_df['ROAS'] = display_df['ROAS'].map('{:.0f}%'.format)
+
+        st.dataframe(
+            display_df[['Location', 'Spend', 'Impressions', 'Clicks', 'CTR', 'CPC', 'Conversions', 'CPA', 'Revenue', 'ROAS']],
+            use_container_width=True,
+            hide_index=True
+        )
+else:
+    st.info("No geographic data available.")
+
+st.markdown("---")
+
+# --- Demographics: Age ---
+st.header("🎂 Age Demographics")
+
+if not age_data.empty:
+    c1, c2 = st.columns(2)
+    with c1:
+        st.subheader("Spend by Age Range")
+        fig_age_spend = px.pie(age_data, values='Spend', names='Age Range', title='Spend Distribution by Age')
+        st.plotly_chart(fig_age_spend, use_container_width=True)
+    
+    with c2:
+        st.subheader("Conversions by Age Range")
+        fig_age_conv = px.bar(age_data, x='Age Range', y='Conversions', title='Conversions by Age', text_auto=True)
+        st.plotly_chart(fig_age_conv, use_container_width=True)
+        
+    with st.expander("View Detailed Age Data"):
+        display_age = age_data.copy()
+        display_age['Spend'] = display_age['Spend'].apply(format_currency)
+        display_age['CPC'] = display_age['CPC'].apply(format_currency)
+        display_age['CPA'] = display_age['CPA'].apply(format_currency)
+        display_age['Revenue'] = display_age['ConversionValue'].apply(format_currency)
+        display_age['CTR'] = display_age['CTR'].map('{:.2f}%'.format)
+        display_age['ROAS'] = display_age['ROAS'].map('{:.0f}%'.format)
+        
+        st.dataframe(
+            display_age[['Age Range', 'Spend', 'Impressions', 'Clicks', 'CTR', 'CPC', 'Conversions', 'CPA', 'Revenue', 'ROAS']],
+            use_container_width=True,
+            hide_index=True
+        )
+else:
+    st.info("No age data available.")
+
+st.markdown("---")
+
+# --- Demographics: Gender ---
+st.header("⚧ Gender Demographics")
+
+if not gender_data.empty:
+    c1, c2 = st.columns(2)
+    with c1:
+        st.subheader("Spend by Gender")
+        fig_gender_spend = px.pie(gender_data, values='Spend', names='Gender', title='Spend Distribution by Gender', hole=0.4)
+        st.plotly_chart(fig_gender_spend, use_container_width=True)
+    
+    with c2:
+        st.subheader("Conversions by Gender")
+        fig_gender_conv = px.bar(gender_data, x='Gender', y='Conversions', title='Conversions by Gender', text_auto=True)
+        st.plotly_chart(fig_gender_conv, use_container_width=True)
+
+    with st.expander("View Detailed Gender Data"):
+        display_gender = gender_data.copy()
+        display_gender['Spend'] = display_gender['Spend'].apply(format_currency)
+        display_gender['CPC'] = display_gender['CPC'].apply(format_currency)
+        display_gender['CPA'] = display_gender['CPA'].apply(format_currency)
+        display_gender['Revenue'] = display_gender['ConversionValue'].apply(format_currency)
+        display_gender['CTR'] = display_gender['CTR'].map('{:.2f}%'.format)
+        display_gender['ROAS'] = display_gender['ROAS'].map('{:.0f}%'.format)
+        
+        st.dataframe(
+            display_gender[['Gender', 'Spend', 'Impressions', 'Clicks', 'CTR', 'CPC', 'Conversions', 'CPA', 'Revenue', 'ROAS']],
+            use_container_width=True,
+            hide_index=True
+        )
+else:
+    st.info("No gender data available.")
 
 
-# 4. Detailed Table
-st.subheader("Detailed Geographic Performance")
-
-# Format for display
-display_df = geo_data.copy()
-display_df['Spend'] = display_df['Spend'].apply(format_currency)
-display_df['CPC'] = display_df['CPC'].apply(format_currency)
-display_df['CPA'] = display_df['CPA'].apply(format_currency)
-display_df['Revenue'] = display_df['ConversionValue'].apply(format_currency)
-display_df['CTR'] = display_df['CTR'].map('{:.2f}%'.format)
-display_df['ROAS'] = display_df['ROAS'].map('{:.0f}%'.format)
-
-st.dataframe(
-    display_df[['Location', 'Spend', 'Impressions', 'Clicks', 'CTR', 'CPC', 'Conversions', 'CPA', 'Revenue', 'ROAS']],
-    use_container_width=True,
-    hide_index=True,
-    column_config={
-        "Location": "Location",
-        "Spend": "Cost",
-        "Impressions": "Impr.",
-        "Clicks": "Clicks",
-        "CTR": "CTR",
-        "CPC": "CPC",
-        "Conversions": "Conv.",
-        "CPA": "CPA",
-        "Revenue": "Conv. Value",
-        "ROAS": "ROAS"
-    }
-)

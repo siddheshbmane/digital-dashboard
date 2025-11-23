@@ -162,7 +162,9 @@ class GoogleAdsConnector:
                     segments.geo_target_city,
                     metrics.impressions,
                     metrics.clicks,
-                    metrics.cost_micros
+                    metrics.cost_micros,
+                    metrics.conversions,
+                    metrics.conversions_value
                 FROM geographic_view
                 WHERE segments.date BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{end_date.strftime('%Y-%m-%d')}'
             """
@@ -177,7 +179,9 @@ class GoogleAdsConnector:
                         'Location': loc,
                         'Impressions': row.metrics.impressions,
                         'Clicks': row.metrics.clicks,
-                        'Spend': row.metrics.cost_micros / 1000000
+                        'Spend': row.metrics.cost_micros / 1000000,
+                        'Conversions': row.metrics.conversions,
+                        'ConversionValue': row.metrics.conversions_value
                     })
             return pd.DataFrame(data)
         except Exception as e:
@@ -447,3 +451,142 @@ class GoogleAdsConnector:
             return False, "google-ads library not installed."
         except Exception as e:
             return False, f"Connection failed: {str(e)}"
+
+    def get_age_range_data(self, start_date, end_date):
+        """
+        Fetches Age Range performance data.
+        """
+        if self.use_mock:
+            dates = pd.date_range(start=start_date, end=end_date)
+            data = []
+            ages = ['18-24', '25-34', '35-44', '45-54', '55-64', '65+']
+            for date in dates:
+                for age in ages:
+                    data.append({
+                        'Date': date,
+                        'Age Range': age,
+                        'Impressions': np.random.randint(50, 500),
+                        'Clicks': np.random.randint(5, 50),
+                        'Spend': np.random.uniform(5, 30),
+                        'Conversions': np.random.randint(0, 3),
+                        'ConversionValue': np.random.uniform(0, 100)
+                    })
+            return pd.DataFrame(data)
+
+        if not self.credentials:
+            return pd.DataFrame()
+
+        try:
+            from google.ads.googleads.client import GoogleAdsClient
+            config = {**self.credentials, "use_proto_plus": True}
+            client = GoogleAdsClient.load_from_dict(config)
+            if self.credentials.get("login_customer_id"):
+                client.login_customer_id = self.credentials.get("login_customer_id")
+            
+            ga_service = client.get_service("GoogleAdsService")
+            customer_id = self.credentials.get("customer_id")
+            
+            query = f"""
+                SELECT
+                    ad_group_criterion.age_range.type,
+                    metrics.impressions,
+                    metrics.clicks,
+                    metrics.cost_micros,
+                    metrics.conversions,
+                    metrics.conversions_value
+                FROM age_range_view
+                WHERE segments.date BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{end_date.strftime('%Y-%m-%d')}'
+            """
+            
+            stream = ga_service.search_stream(customer_id=customer_id, query=query)
+            data = []
+            
+            # Map enum to readable string manually if needed, or rely on string representation
+            # The API returns enums like AGE_RANGE_18_24. We can clean this up.
+            
+            for batch in stream:
+                for row in batch.results:
+                    age_type = row.ad_group_criterion.age_range.type_.name
+                    # Clean up string: AGE_RANGE_18_24 -> 18-24
+                    age_clean = age_type.replace('AGE_RANGE_', '').replace('_', '-')
+                    
+                    data.append({
+                        'Age Range': age_clean,
+                        'Impressions': row.metrics.impressions,
+                        'Clicks': row.metrics.clicks,
+                        'Spend': row.metrics.cost_micros / 1000000,
+                        'Conversions': row.metrics.conversions,
+                        'ConversionValue': row.metrics.conversions_value
+                    })
+            return pd.DataFrame(data)
+        except Exception as e:
+            st.error(f"Failed to fetch Age data: {e}")
+            return pd.DataFrame()
+
+    def get_gender_data(self, start_date, end_date):
+        """
+        Fetches Gender performance data.
+        """
+        if self.use_mock:
+            dates = pd.date_range(start=start_date, end=end_date)
+            data = []
+            genders = ['Male', 'Female', 'Undetermined']
+            for date in dates:
+                for gender in genders:
+                    data.append({
+                        'Date': date,
+                        'Gender': gender,
+                        'Impressions': np.random.randint(50, 500),
+                        'Clicks': np.random.randint(5, 50),
+                        'Spend': np.random.uniform(5, 30),
+                        'Conversions': np.random.randint(0, 3),
+                        'ConversionValue': np.random.uniform(0, 100)
+                    })
+            return pd.DataFrame(data)
+
+        if not self.credentials:
+            return pd.DataFrame()
+
+        try:
+            from google.ads.googleads.client import GoogleAdsClient
+            config = {**self.credentials, "use_proto_plus": True}
+            client = GoogleAdsClient.load_from_dict(config)
+            if self.credentials.get("login_customer_id"):
+                client.login_customer_id = self.credentials.get("login_customer_id")
+            
+            ga_service = client.get_service("GoogleAdsService")
+            customer_id = self.credentials.get("customer_id")
+            
+            query = f"""
+                SELECT
+                    ad_group_criterion.gender.type,
+                    metrics.impressions,
+                    metrics.clicks,
+                    metrics.cost_micros,
+                    metrics.conversions,
+                    metrics.conversions_value
+                FROM gender_view
+                WHERE segments.date BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{end_date.strftime('%Y-%m-%d')}'
+            """
+            
+            stream = ga_service.search_stream(customer_id=customer_id, query=query)
+            data = []
+            
+            for batch in stream:
+                for row in batch.results:
+                    gender_type = row.ad_group_criterion.gender.type_.name
+                    # Clean up string: GENDER_MALE -> Male
+                    gender_clean = gender_type.replace('GENDER_', '').title()
+                    
+                    data.append({
+                        'Gender': gender_clean,
+                        'Impressions': row.metrics.impressions,
+                        'Clicks': row.metrics.clicks,
+                        'Spend': row.metrics.cost_micros / 1000000,
+                        'Conversions': row.metrics.conversions,
+                        'ConversionValue': row.metrics.conversions_value
+                    })
+            return pd.DataFrame(data)
+        except Exception as e:
+            st.error(f"Failed to fetch Gender data: {e}")
+            return pd.DataFrame()
