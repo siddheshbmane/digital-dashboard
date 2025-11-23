@@ -10,10 +10,10 @@ class FacebookAdsConnector:
 
     @st.cache_data(ttl=3600)
     def get_data(_self, start_date, end_date):
-        if self.use_mock:
-            return self._get_mock_data(start_date, end_date)
+        if _self.use_mock:
+            return _self._get_mock_data(start_date, end_date)
         else:
-            return self._get_real_data(start_date, end_date)
+            return _self._get_real_data(start_date, end_date)
 
     def _get_mock_data(self, start_date, end_date):
         """
@@ -149,7 +149,7 @@ class FacebookAdsConnector:
         Fetches data broken down by a specific dimension.
         Supported breakdowns: 'region', 'publisher_platform', 'platform_position' (placement)
         """
-        if self.use_mock:
+        if _self.use_mock:
             # Mock data
             dates = pd.date_range(start=start_date, end=end_date)
             data = []
@@ -171,7 +171,7 @@ class FacebookAdsConnector:
                     })
             return pd.DataFrame(data)
 
-        if not self.credentials:
+        if not _self.credentials:
             return pd.DataFrame()
 
         try:
@@ -179,10 +179,10 @@ class FacebookAdsConnector:
             from facebook_business.adobjects.adaccount import AdAccount
             from facebook_business.adobjects.adsinsights import AdsInsights
 
-            app_id = self.credentials.get("app_id")
-            app_secret = self.credentials.get("app_secret")
-            access_token = self.credentials.get("access_token")
-            ad_account_id = self.credentials.get("ad_account_id")
+            app_id = _self.credentials.get("app_id")
+            app_secret = _self.credentials.get("app_secret")
+            access_token = _self.credentials.get("access_token")
+            ad_account_id = _self.credentials.get("ad_account_id")
 
             FacebookAdsApi.init(app_id, app_secret, access_token)
             account = AdAccount(ad_account_id)
@@ -229,7 +229,7 @@ class FacebookAdsConnector:
         """
         Fetches Ad Set level data.
         """
-        if self.use_mock:
+        if _self.use_mock:
             dates = pd.date_range(start=start_date, end=end_date)
             data = []
             for date in dates:
@@ -246,7 +246,7 @@ class FacebookAdsConnector:
                     })
             return pd.DataFrame(data)
 
-        if not self.credentials:
+        if not _self.credentials:
             return pd.DataFrame()
 
         try:
@@ -254,10 +254,10 @@ class FacebookAdsConnector:
             from facebook_business.adobjects.adaccount import AdAccount
             from facebook_business.adobjects.adsinsights import AdsInsights
 
-            app_id = self.credentials.get("app_id")
-            app_secret = self.credentials.get("app_secret")
-            access_token = self.credentials.get("access_token")
-            ad_account_id = self.credentials.get("ad_account_id")
+            app_id = _self.credentials.get("app_id")
+            app_secret = _self.credentials.get("app_secret")
+            access_token = _self.credentials.get("access_token")
+            ad_account_id = _self.credentials.get("ad_account_id")
 
             FacebookAdsApi.init(app_id, app_secret, access_token)
             account = AdAccount(ad_account_id)
@@ -327,7 +327,7 @@ class FacebookAdsConnector:
         """
         Fetches Ad level data (Creative).
         """
-        if self.use_mock:
+        if _self.use_mock:
             dates = pd.date_range(start=start_date, end=end_date)
             data = []
             for date in dates:
@@ -345,7 +345,7 @@ class FacebookAdsConnector:
                     })
             return pd.DataFrame(data)
             
-        if not self.credentials:
+        if not _self.credentials:
             return pd.DataFrame()
 
         try:
@@ -353,10 +353,10 @@ class FacebookAdsConnector:
             from facebook_business.adobjects.adaccount import AdAccount
             from facebook_business.adobjects.adsinsights import AdsInsights
 
-            app_id = self.credentials.get("app_id")
-            app_secret = self.credentials.get("app_secret")
-            access_token = self.credentials.get("access_token")
-            ad_account_id = self.credentials.get("ad_account_id")
+            app_id = _self.credentials.get("app_id")
+            app_secret = _self.credentials.get("app_secret")
+            access_token = _self.credentials.get("access_token")
+            ad_account_id = _self.credentials.get("ad_account_id")
 
             FacebookAdsApi.init(app_id, app_secret, access_token)
             account = AdAccount(ad_account_id)
@@ -416,7 +416,7 @@ class FacebookAdsConnector:
         Fetches a mapping of Ad ID to Landing Page URL.
         Note: This requires fetching Ad Creatives.
         """
-        if self.use_mock:
+        if _self.use_mock:
             # Mock URLs
             return {
                 'Ad 0': 'https://example.com/landing-page-a',
@@ -426,7 +426,7 @@ class FacebookAdsConnector:
                 'Ad 4': 'https://example.com/landing-page-b'
             }
 
-        if not self.credentials:
+        if not _self.credentials:
             return {}
 
         try:
@@ -434,10 +434,10 @@ class FacebookAdsConnector:
             from facebook_business.adobjects.adaccount import AdAccount
             from facebook_business.adobjects.ad import Ad
             
-            app_id = self.credentials.get("app_id")
-            app_secret = self.credentials.get("app_secret")
-            access_token = self.credentials.get("access_token")
-            ad_account_id = self.credentials.get("ad_account_id")
+            app_id = _self.credentials.get("app_id")
+            app_secret = _self.credentials.get("app_secret")
+            access_token = _self.credentials.get("access_token")
+            ad_account_id = _self.credentials.get("ad_account_id")
 
             FacebookAdsApi.init(app_id, app_secret, access_token)
             account = AdAccount(ad_account_id)
