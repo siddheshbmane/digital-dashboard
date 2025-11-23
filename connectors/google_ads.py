@@ -170,23 +170,96 @@ class GoogleAdsConnector:
             """
             
             stream = ga_service.search_stream(customer_id=customer_id, query=query)
-            data = []
+            
+            # Collect data and resource names
+            raw_data = []
+            geo_resource_names = set()
+            
             for batch in stream:
                 for row in batch.results:
-                    # Construct a location string
-                    loc = row.segments.geo_target_city or row.segments.geo_target_state or "Unknown"
-                    data.append({
-                        'Location': loc,
+                    city_res = row.segments.geo_target_city
+                    state_res = row.segments.geo_target_state
+                    
+                    if city_res:
+                        geo_resource_names.add(city_res)
+                    if state_res:
+                        geo_resource_names.add(state_res)
+                        
+                    raw_data.append({
+                        'city_res': city_res,
+                        'state_res': state_res,
                         'Impressions': row.metrics.impressions,
                         'Clicks': row.metrics.clicks,
                         'Spend': row.metrics.cost_micros / 1000000,
                         'Conversions': row.metrics.conversions,
                         'ConversionValue': row.metrics.conversions_value
                     })
+            
+            # Fetch readable names
+            name_map = self._fetch_geo_names(client, list(geo_resource_names))
+            
+            data = []
+            for item in raw_data:
+                city_name = name_map.get(item['city_res'], item['city_res']) if item['city_res'] else None
+                state_name = name_map.get(item['state_res'], item['state_res']) if item['state_res'] else None
+                
+                # Prioritize city, then state
+                loc = city_name or state_name or "Unknown"
+                
+                data.append({
+                    'Location': loc,
+                    'Impressions': item['Impressions'],
+                    'Clicks': item['Clicks'],
+                    'Spend': item['Spend'],
+                    'Conversions': item['Conversions'],
+                    'ConversionValue': item['ConversionValue']
+                })
+                
             return pd.DataFrame(data)
         except Exception as e:
             st.error(f"Failed to fetch Geo data: {e}")
             return pd.DataFrame()
+
+    def _fetch_geo_names(self, client, resource_names):
+        """
+        Helper to fetch human-readable names for geoTargetConstants.
+        """
+        if not resource_names:
+            return {}
+            
+        try:
+            # Deduplicate
+            resource_names = list(set(resource_names))
+            
+            # Chunking if necessary (API limit is high, but good practice)
+            chunk_size = 1000
+            name_map = {}
+            
+            ga_service = client.get_service("GoogleAdsService")
+            customer_id = self.credentials.get("customer_id")
+            
+            for i in range(0, len(resource_names), chunk_size):
+                chunk = resource_names[i:i + chunk_size]
+                formatted_names = ", ".join([f"'{name}'" for name in chunk])
+                
+                query = f"""
+                    SELECT 
+                        geo_target_constant.resource_name, 
+                        geo_target_constant.name 
+                    FROM geo_target_constant 
+                    WHERE geo_target_constant.resource_name IN ({formatted_names})
+                """
+                
+                stream = ga_service.search_stream(customer_id=customer_id, query=query)
+                for batch in stream:
+                    for row in batch.results:
+                        name_map[row.geo_target_constant.resource_name] = row.geo_target_constant.name
+                        
+            return name_map
+        except Exception as e:
+            # Log error but don't fail the whole request, return empty map so we fall back to IDs
+            print(f"Warning: Failed to resolve geo names: {e}")
+            return {}
 
     def get_keyword_data(self, start_date, end_date):
         """
