@@ -82,7 +82,14 @@ fb_merged = merge_api_and_leads(fb_df, leads_df)
 combined_df = pd.concat([google_merged, fb_merged], ignore_index=True)
 
 # --- Ad Data ---
+# --- Ad Data ---
 ad_data = get_ad_performance_data(combined_df)
+
+# Debug Columns
+with st.expander("Debug Ad Data Columns", expanded=False):
+    st.write("Ad Data Columns:", ad_data.columns.tolist())
+    if not ad_data.empty:
+        st.write("First Row:", ad_data.iloc[0].to_dict())
 
 if ad_data.empty:
     st.warning("No Ad-level data available. Ensure your data includes 'Ad Name' or 'Ad ID'.")
