@@ -1,0 +1,33 @@
+[
+    {
+        "id": "a50255fa-b960-47c3-b33b-40488aa64584",
+        "name": "ITP Pune",
+        "industry": "Education",
+        "google_id": "5997730208",
+        "meta_id": "act_128818715120532",
+        "status": "Active",
+        "qualified_stages": [
+            "admission",
+            "interested",
+            "walk-in",
+            "prospect"
+        ],
+        "service_column": "course"
+    },
+    {
+        "id": "4c84cb7d-d798-45c3-8d4e-fd398af62c6b",
+        "name": "Nava Dental",
+        "industry": "Dentist",
+        "google_id": "5215243001",
+        "meta_id": "act_1150708143557733",
+        "status": "Active"
+    },
+    {
+        "id": "ea8f0660-9e6f-4a76-9143-3e0071c76af6",
+        "name": "Unplugged",
+        "industry": "Video Servie",
+        "google_id": "3606210494",
+        "meta_id": "act_494943070107265",
+        "status": "Active"
+    }
+]

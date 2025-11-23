@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cost Variance Analysis - Lead Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="enhanced-theme.css">
+    <style>
+        .sidebar { width: 260px; }
+
+        .variance-positive { color: #10B981; }
+        .variance-negative { color: #EF4444; }
+        .variance-neutral { color: #6B7280; }
+
+        .alert-row { background: #FEF2F2; border-left: 4px solid #EF4444; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center space-x-4">
+                <button onclick="window.location='index.html'" class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-arrow-left text-xl"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-purple-600">Olio Global AdTech</h1>
+            </div>
+            <div class="flex items-center space-x-4">
+                <button id="darkModeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <div class="flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-lg">
+                    <i class="fas fa-calendar text-purple-600"></i>
+                    <select class="bg-transparent outline-none text-sm font-medium">
+                        <option value="30days" selected>Last 30 Days</option>
+                        <option value="90days">Last 90 Days</option>
+                    </select>
+                </div>
+                <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">AM</div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex pt-18">
+        <aside id="sidebar" class="sidebar bg-white shadow-lg fixed left-0 top-18 bottom-0 overflow-y-auto">
+                        <nav class="py-4">
+                <!-- Dashboard -->
+                <div class="px-4 mb-2">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Dashboard</h3>
+                </div>
+                <a href="index.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-chart-line w-6"></i>
+                    <span class="ml-3 sidebar-text">Master Summary</span>
+                </a>
+
+                <!-- Client Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Client Reports</h3>
+                </div>
+                <a href="client-deepdive.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-building w-6"></i>
+                    <span class="ml-3 sidebar-text">Client Deep-Dive</span>
+                </a>
+                <a href="client-comparison.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-balance-scale w-6"></i>
+                    <span class="ml-3 sidebar-text">Client Comparison</span>
+                </a>
+
+                <!-- Campaign & Ad Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Campaign & Ads</h3>
+                </div>
+                <a href="campaign-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-megaphone w-6"></i>
+                    <span class="ml-3 sidebar-text">Campaign Performance</span>
+                </a>
+                <a href="ad-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-ad w-6"></i>
+                    <span class="ml-3 sidebar-text">Ad Performance</span>
+                </a>
+                <a href="creative-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-palette w-6"></i>
+                    <span class="ml-3 sidebar-text">Creative Performance</span>
+                </a>
+                <a href="platform-comparison.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-chart-bar w-6"></i>
+                    <span class="ml-3 sidebar-text">Platform Comparison</span>
+                </a>
+
+                <!-- Lead Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Lead Analytics</h3>
+                </div>
+                <a href="lead-stage-funnel.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-filter w-6"></i>
+                    <span class="ml-3 sidebar-text">Lead Stage Funnel</span>
+                </a>
+                <a href="lead-source-analysis.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-bullseye w-6"></i>
+                    <span class="ml-3 sidebar-text">Lead Source Analysis</span>
+                </a>
+                <a href="geographic-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-map-marker-alt w-6"></i>
+                    <span class="ml-3 sidebar-text">Geographic Performance</span>
+                </a>
+                <a href="service-wise-analysis.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-briefcase w-6"></i>
+                    <span class="ml-3 sidebar-text">Service/Product Analysis</span>
+                </a>
+                <a href="keyword-analysis.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-key w-6"></i>
+                    <span class="ml-3 sidebar-text">Keyword Analysis</span>
+                </a>
+
+                <!-- Financial Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Financial</h3>
+                </div>
+                <a href="budget-vs-actual.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-wallet w-6"></i>
+                    <span class="ml-3 sidebar-text">Budget vs Actual</span>
+                </a>
+                <a href="cost-variance.html" class="nav-item active flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-chart-area w-6"></i>
+                    <span class="ml-3 sidebar-text">Cost Variance</span>
+                </a>
+                <a href="revenue-attribution.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-rupee-sign w-6"></i>
+                    <span class="ml-3 sidebar-text">Revenue Attribution</span>
+                </a>
+
+                <!-- Trend Analysis -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Trends</h3>
+                </div>
+                <a href="time-trends.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-clock w-6"></i>
+                    <span class="ml-3 sidebar-text">Time-based Trends</span>
+                </a>
+
+                <!-- Data Upload -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Data Management</h3>
+                </div>
+                <a href="upload.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-upload w-6"></i>
+                    <span class="ml-3 sidebar-text">Upload Data</span>
+                </a>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 ml-64">
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <option selected>All</option>
+                        <option>Tech Manufacturing Ltd</option>
+                        <option>EduTech Solutions</option>
+                        <option>HealthWellness Clinic</option>
+                        <option>RetailCorp Pvt Ltd</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-31">
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-refresh mr-2"></i>Refresh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800">Cost Variance Analysis Report</h2>
+                        <p class="text-gray-600 mt-1">Track CPL and CPQL variance over time (Oct 12 - Nov 11, 2025)</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50">
+                            <i class="fas fa-file-excel text-green-600 mr-2"></i>Export
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Alert Summary -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-sm font-medium text-gray-600">Current Avg. CPL</h4>
+                        <i class="fas fa-rupee-sign text-blue-600 text-xl"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">₹1,470</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="variance-negative font-medium">↑ 3.2%</span>
+                        <span class="text-gray-500 ml-2">vs previous week</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-sm font-medium text-gray-600">Current Avg. CPQL</h4>
+                        <i class="fas fa-star text-teal-600 text-xl"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">₹2,034</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="variance-positive font-medium">↓ 1.8%</span>
+                        <span class="text-gray-500 ml-2">vs previous week</span>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-sm font-medium text-gray-600">Variance Alerts</h4>
+                        <i class="fas fa-exclamation-triangle text-yellow-600 text-xl"></i>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">3</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="text-yellow-600 font-medium">2 CPL, 1 CPQL</span>
+                        <span class="text-gray-500 ml-2">exceeded 20%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CPL Trend -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">CPL Trend Over Time</h3>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1 text-sm bg-purple-600 text-white rounded">Daily</button>
+                        <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">Weekly</button>
+                    </div>
+                </div>
+                <div style="height: 300px;">
+                    <canvas id="cplTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- CPQL Trend -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">CPQL Trend Over Time</h3>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1 text-sm bg-purple-600 text-white rounded">Daily</button>
+                        <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">Weekly</button>
+                    </div>
+                </div>
+                <div style="height: 300px;">
+                    <canvas id="cpqlTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Variance Heatmap -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Week-by-Week Variance Heatmap</h3>
+                <p class="text-sm text-gray-600 mb-4">Red cells indicate >20% increase (alert threshold)</p>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Week</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Avg CPL</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">CPL Variance</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Trend</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Avg CPQL</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">CPQL Variance</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Trend</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 font-medium">Week 1 (Oct 12-18)</td>
+                                <td class="px-4 py-4 font-mono">₹1,425</td>
+                                <td class="px-4 py-4 font-mono variance-neutral">-</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-right text-gray-400"></i></td>
+                                <td class="px-4 py-4 font-mono">₹2,015</td>
+                                <td class="px-4 py-4 font-mono variance-neutral">-</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-right text-gray-400"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 font-medium">Week 2 (Oct 19-25)</td>
+                                <td class="px-4 py-4 font-mono">₹1,398</td>
+                                <td class="px-4 py-4 font-mono variance-positive">↓ 1.9%</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-down text-green-600"></i></td>
+                                <td class="px-4 py-4 font-mono">₹1,987</td>
+                                <td class="px-4 py-4 font-mono variance-positive">↓ 1.4%</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-down text-green-600"></i></td>
+                            </tr>
+                            <tr class="alert-row">
+                                <td class="px-4 py-4 font-medium">Week 3 (Oct 26-Nov 1)</td>
+                                <td class="px-4 py-4 font-mono">₹1,745</td>
+                                <td class="px-4 py-4 font-mono variance-negative font-bold">↑ 24.8%</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-up text-red-600 text-lg"></i></td>
+                                <td class="px-4 py-4 font-mono">₹2,280</td>
+                                <td class="px-4 py-4 font-mono variance-negative font-bold">↑ 14.7%</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-up text-red-600"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 font-medium">Week 4 (Nov 2-8)</td>
+                                <td class="px-4 py-4 font-mono">₹1,512</td>
+                                <td class="px-4 py-4 font-mono variance-positive">↓ 13.4%</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-down text-green-600"></i></td>
+                                <td class="px-4 py-4 font-mono">₹2,105</td>
+                                <td class="px-4 py-4 font-mono variance-positive">↓ 7.7%</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-down text-green-600"></i></td>
+                            </tr>
+                            <tr class="hover:bg-gray-50">
+                                <td class="px-4 py-4 font-medium">Week 5 (Nov 9-11)</td>
+                                <td class="px-4 py-4 font-mono">₹1,470</td>
+                                <td class="px-4 py-4 font-mono variance-negative">↑ 2.8%</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-up text-orange-500"></i></td>
+                                <td class="px-4 py-4 font-mono">₹2,034</td>
+                                <td class="px-4 py-4 font-mono variance-positive">↓ 3.4%</td>
+                                <td class="px-4 py-4"><i class="fas fa-arrow-down text-green-600"></i></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Alerts -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">
+                    <i class="fas fa-bell text-yellow-600 mr-2"></i>
+                    Active Cost Variance Alerts
+                </h3>
+                <p class="text-sm text-gray-600 mb-4">Campaigns/weeks with >20% cost increase</p>
+
+                <div class="space-y-3">
+                    <div class="border border-red-200 bg-red-50 rounded-lg p-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-exclamation-circle text-red-600 text-xl mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-red-900">Week 3: CPL Increased 24.8%</h4>
+                                    <p class="text-sm text-red-700 mt-1">From ₹1,398 to ₹1,745 (Oct 26 - Nov 1)</p>
+                                    <p class="text-xs text-red-600 mt-1">Possible causes: Lower CTR, increased competition</p>
+                                </div>
+                            </div>
+                            <button class="text-sm text-red-600 hover:text-red-700">Investigate →</button>
+                        </div>
+                    </div>
+
+                    <div class="border border-yellow-200 bg-yellow-50 rounded-lg p-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-exclamation-triangle text-yellow-600 text-xl mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-yellow-900">Campaign: Google_Search_Manufacturing CPQL +18.5%</h4>
+                                    <p class="text-sm text-yellow-700 mt-1">CPQL increased from ₹1,850 to ₹2,192 in last 7 days</p>
+                                    <p class="text-xs text-yellow-600 mt-1">Qualification rate dropped from 78% to 71%</p>
+                                </div>
+                            </div>
+                            <button class="text-sm text-yellow-600 hover:text-yellow-700">View Details →</button>
+                        </div>
+                    </div>
+
+                    <div class="border border-green-200 bg-green-50 rounded-lg p-4">
+                        <div class="flex items-start justify-between">
+                            <div class="flex items-start space-x-3">
+                                <i class="fas fa-check-circle text-green-600 text-xl mt-1"></i>
+                                <div>
+                                    <h4 class="font-semibold text-green-900">Good News: Overall CPQL Trending Down</h4>
+                                    <p class="text-sm text-green-700 mt-1">4-week average shows -5.2% improvement in CPQL</p>
+                                    <p class="text-xs text-green-600 mt-1">Optimization efforts showing positive results</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // CPL Trend Chart
+        const cplCtx = document.getElementById('cplTrendChart').getContext('2d');
+        new Chart(cplCtx, {
+            type: 'line',
+            data: {
+                labels: ['Oct 12', 'Oct 15', 'Oct 18', 'Oct 21', 'Oct 24', 'Oct 27', 'Oct 30', 'Nov 2', 'Nov 5', 'Nov 8', 'Nov 11'],
+                datasets: [{
+                    label: 'Google Ads CPL',
+                    data: [1420, 1390, 1405, 1725, 1810, 1765, 1580, 1505, 1490, 1475, 1460],
+                    borderColor: '#4285F4',
+                    backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                }, {
+                    label: 'Meta Ads CPL',
+                    data: [1430, 1410, 1398, 1695, 1725, 1680, 1595, 1520, 1498, 1485, 1480],
+                    borderColor: '#1877F2',
+                    backgroundColor: 'rgba(24, 119, 242, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: value => '₹' + value
+                        }
+                    }
+                }
+            }
+        });
+
+        // CPQL Trend Chart
+        const cpqlCtx = document.getElementById('cpqlTrendChart').getContext('2d');
+        new Chart(cpqlCtx, {
+            type: 'line',
+            data: {
+                labels: ['Oct 12', 'Oct 15', 'Oct 18', 'Oct 21', 'Oct 24', 'Oct 27', 'Oct 30', 'Nov 2', 'Nov 5', 'Nov 8', 'Nov 11'],
+                datasets: [{
+                    label: 'Google Ads CPQL',
+                    data: [2025, 1980, 1995, 2285, 2350, 2310, 2180, 2120, 2090, 2065, 2050],
+                    borderColor: '#34A853',
+                    backgroundColor: 'rgba(52, 168, 83, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                }, {
+                    label: 'Meta Ads CPQL',
+                    data: [2010, 1975, 1988, 2270, 2310, 2275, 2145, 2095, 2070, 2048, 2035],
+                    borderColor: '#FBBC04',
+                    backgroundColor: 'rgba(251, 188, 4, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 5,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { position: 'bottom' }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: value => '₹' + value
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- Mobile Sidebar Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+
+            // Close sidebar when clicking nav links on mobile
+            const navLinks = sidebar.querySelectorAll('.nav-item');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 640) {
+                        sidebar.classList.remove('active');
+                        sidebarOverlay.classList.remove('active');
+                    }
+                });
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 640) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+    <!-- Dark Mode Script -->
+    <script src="js/dark-mode.js"></script>
+
+</body>
+</html>

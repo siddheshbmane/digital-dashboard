@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Source Analysis - Lead Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="enhanced-theme.css">
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Lead Source Analysis</h1>
+                    <p class="text-sm text-gray-500 mt-1">Understand where your qualified leads are coming from</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="darkModeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                        <i class="fa-solid fa-download mr-2"></i>Export Report
+                    </button>
+                    <a href="index.html" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <option selected>All</option>
+                        <option>Tech Manufacturing Ltd</option>
+                        <option>EduTech Solutions</option>
+                        <option>HealthWellness Clinic</option>
+                        <option>RetailCorp Pvt Ltd</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-31">
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-refresh mr-2"></i>Refresh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards by Source -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+
+            <!-- Google Search -->
+            <div class="bg-white rounded-lg shadow-sm p-6 source-card border-l-4 border-blue-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-brands fa-google text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Google Search</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">218</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Qualification Rate</p>
+                        <p class="text-lg font-semibold text-green-600">76.5%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,548</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPQL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹2,105</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹18.5L</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google YouTube -->
+            <div class="bg-white rounded-lg shadow-sm p-6 source-card border-l-4 border-red-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-brands fa-youtube text-red-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Google YouTube</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">124</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Qualification Rate</p>
+                        <p class="text-lg font-semibold text-green-600">68.2%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,612</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPQL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹2,365</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹8.0L</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Display -->
+            <div class="bg-white rounded-lg shadow-sm p-6 source-card border-l-4 border-yellow-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-image text-yellow-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Google Display</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">85</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Qualification Rate</p>
+                        <p class="text-lg font-semibold text-yellow-600">64.8%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,420</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPQL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹2,190</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹6.5L</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meta-FB -->
+            <div class="bg-white rounded-lg shadow-sm p-6 source-card border-l-4 border-blue-700">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-700 bg-opacity-10 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-brands fa-facebook text-blue-700 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Meta-FB</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">156</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Qualification Rate</p>
+                        <p class="text-lg font-semibold text-green-600">72.4%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,350</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPQL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,865</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹13.2L</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Meta-Insta -->
+            <div class="bg-white rounded-lg shadow-sm p-6 source-card border-l-4 border-pink-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-brands fa-instagram text-pink-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Meta-Insta</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">114</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Qualification Rate</p>
+                        <p class="text-lg font-semibold text-green-600">68.9%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,398</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPQL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹2,028</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹5.97L</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Organic/Direct -->
+            <div class="bg-white rounded-lg shadow-sm p-6 source-card border-l-4 border-gray-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-gray-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-globe text-gray-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Organic/Direct</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">45</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Qualification Rate</p>
+                        <p class="text-lg font-semibold text-green-600">82.2%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹0</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg CPQL:</span>
+                        <span class="font-mono font-medium text-gray-900">₹0</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹3.5L</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+            <!-- Source Distribution Chart -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Distribution by Source</h3>
+                <div class="chart-container">
+                    <canvas id="sourceDistributionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Qualification Rate Comparison -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Qualification Rate by Source</h3>
+                <div class="chart-container">
+                    <canvas id="qualificationRateChart"></canvas>
+                </div>
+            </div>
+
+            <!-- CPL Comparison -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">CPL Comparison by Source</h3>
+                <div class="chart-container">
+                    <canvas id="cplComparisonChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Source Trend Over Time -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Volume Trend (Last 30 Days)</h3>
+                <div class="chart-container">
+                    <canvas id="sourceTrendChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Detailed Table -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h3 class="text-lg font-semibold text-gray-900">Detailed Source Analysis</h3>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Source</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Total Leads</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Qualified</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Qual. Rate</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Avg CPL</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Avg CPQL</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Revenue</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">ROI</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-brands fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Google Search</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">285</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">218</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">76.5%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,548</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹2,105</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹18,50,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">320%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-brands fa-facebook text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Meta-FB</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">215</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">156</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">72.4%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,350</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,865</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹13,20,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">285%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-brands fa-youtube text-red-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Google YouTube</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">182</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">124</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">68.2%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,612</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹2,365</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹8,00,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">245%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-brands fa-instagram text-pink-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Meta-Insta</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">165</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">114</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">68.9%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,398</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹2,028</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹5,97,500</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">258%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-image text-yellow-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Google Display</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">131</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">85</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">64.8%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,420</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹2,190</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹6,50,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">210%</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-globe text-gray-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Organic/Direct</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">55</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">45</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">82.2%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹0</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹0</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹3,50,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">∞</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Stage-wise Lead Analysis -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden mt-8">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50">
+                <h3 class="text-lg font-semibold text-gray-900">Stage-wise Lead Analysis by Source</h3>
+                <p class="text-sm text-gray-600 mt-1">Lead distribution across stages and sub-stages with source breakdown</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Lead Stage</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Sub-Stage</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Total Leads</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Google</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Meta</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Organic</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Conversion Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <!-- NEW LEADS Stage -->
+                        <tr class="bg-blue-50">
+                            <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
+                                <div class="flex items-center">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 bg-blue-500 text-white rounded-full font-bold text-sm mr-3">1</span>
+                                    <span class="text-sm font-bold text-gray-900">NEW LEADS</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Form Submitted</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">458</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">242</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">186</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">30</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">100%</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Phone Inquiry</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">124</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">52</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">47</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">25</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">100%</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-blue-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Chat Inquiry</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">82</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">38</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">44</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">0</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">100%</span>
+                            </td>
+                        </tr>
+
+                        <!-- CONTACTED Stage -->
+                        <tr class="bg-indigo-50">
+                            <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
+                                <div class="flex items-center">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 bg-indigo-500 text-white rounded-full font-bold text-sm mr-3">2</span>
+                                    <span class="text-sm font-bold text-gray-900">CONTACTED</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">First Contact Made</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">512</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">268</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">219</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">25</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800">89.2%</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-indigo-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Follow-up Scheduled</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">435</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">225</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">190</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">20</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800">75.8%</span>
+                            </td>
+                        </tr>
+
+                        <!-- QUALIFIED Stage -->
+                        <tr class="bg-green-50">
+                            <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
+                                <div class="flex items-center">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 bg-green-500 text-white rounded-full font-bold text-sm mr-3">3</span>
+                                    <span class="text-sm font-bold text-gray-900">QUALIFIED</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Budget Confirmed</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">348</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">182</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">148</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">18</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">60.7%</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-green-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Authority Verified</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">328</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">172</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">140</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">16</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">57.2%</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-green-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Need Identified</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">296</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">155</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">126</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">15</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">51.6%</span>
+                            </td>
+                        </tr>
+
+                        <!-- PROPOSAL Stage -->
+                        <tr class="bg-yellow-50">
+                            <td class="px-6 py-4 whitespace-nowrap" rowspan="2">
+                                <div class="flex items-center">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 bg-yellow-500 text-white rounded-full font-bold text-sm mr-3">4</span>
+                                    <span class="text-sm font-bold text-gray-900">PROPOSAL</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Proposal Sent</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">184</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">96</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">78</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">10</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">32.1%</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-yellow-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Proposal Under Review</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">142</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">74</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">60</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">8</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">24.8%</span>
+                            </td>
+                        </tr>
+
+                        <!-- NEGOTIATION Stage -->
+                        <tr class="bg-orange-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 bg-orange-500 text-white rounded-full font-bold text-sm mr-3">5</span>
+                                    <span class="text-sm font-bold text-gray-900">NEGOTIATION</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Price Discussion</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">96</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">50</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">40</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">6</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-orange-100 text-orange-800">16.7%</span>
+                            </td>
+                        </tr>
+
+                        <!-- WON Stage -->
+                        <tr class="bg-emerald-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 bg-emerald-500 text-white rounded-full font-bold text-sm mr-3">✓</span>
+                                    <span class="text-sm font-bold text-gray-900">WON</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Deal Closed</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-emerald-600">68</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">38</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">26</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">4</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-emerald-100 text-emerald-800">11.9%</span>
+                            </td>
+                        </tr>
+
+                        <!-- LOST Stage -->
+                        <tr class="bg-red-50">
+                            <td class="px-6 py-4 whitespace-nowrap" rowspan="3">
+                                <div class="flex items-center">
+                                    <span class="inline-flex items-center justify-center w-8 h-8 bg-red-500 text-white rounded-full font-bold text-sm mr-3">✗</span>
+                                    <span class="text-sm font-bold text-gray-900">LOST</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">No Budget</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">48</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">22</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">24</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">2</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">-</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-red-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Competitor Chosen</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">36</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">18</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">16</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">2</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">-</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-red-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">No Response</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">152</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">64</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">78</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-600">10</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">-</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Vanity Metrics by Source -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden mt-8 mb-8">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-indigo-50 to-purple-50">
+                <h3 class="text-lg font-semibold text-gray-900">Campaign Metrics by Source</h3>
+                <p class="text-sm text-gray-600 mt-1">Ad spend, reach, engagement, and performance metrics</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Source</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Ad Spend</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Impressions</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Clicks</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">CTR</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">CPC</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Avg Position</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Conv. Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-brands fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Google Search</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">₹4,41,180</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">2,458,240</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">12,456</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">0.51%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹35.42</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">2.8</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">2.29%</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-brands fa-youtube text-red-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Google YouTube</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">₹2,93,384</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">8,756,420</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">8,524</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">0.10%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹34.42</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">-</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">2.13%</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-image text-yellow-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Google Display</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">₹1,86,020</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">12,845,380</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">6,285</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">0.05%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹29.60</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">-</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">2.08%</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-brands fa-facebook text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Meta-FB</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">₹2,90,250</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">5,648,920</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">18,456</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">0.33%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹15.73</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">-</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">1.17%</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-brands fa-instagram text-pink-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Meta-Insta</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">₹2,30,670</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">7,892,540</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">14,852</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">0.19%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹15.53</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">-</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">1.11%</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50 bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-globe text-gray-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Organic/Direct</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">₹0</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">-</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">-</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-200 text-gray-800">-</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹0</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">-</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">-</span>
+                            </td>
+                        </tr>
+                        <!-- Total Row -->
+                        <tr class="bg-purple-50 font-semibold border-t-2 border-purple-200">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">TOTAL</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-purple-900">₹12,41,504</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">37,601,500</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">60,573</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-200 text-purple-900">0.16%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">₹20.49</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">-</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-200 text-purple-900">1.43%</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-6 py-3 bg-gray-50 border-t border-gray-200">
+                <p class="text-xs text-gray-500">
+                    <i class="fa-solid fa-info-circle mr-1"></i>
+                    <strong>Note:</strong> CTR = Click-Through Rate, CPC = Cost Per Click, Conv. Rate = Conversion Rate (clicks to leads). Organic traffic metrics not tracked via paid platforms.
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Source Distribution Chart
+        const sourceDistCtx = document.getElementById('sourceDistributionChart').getContext('2d');
+        new Chart(sourceDistCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Google Search', 'Meta-FB', 'Google YouTube', 'Meta-Insta', 'Google Display', 'Organic'],
+                datasets: [{
+                    data: [285, 215, 182, 165, 131, 55],
+                    backgroundColor: [
+                        '#4285F4',
+                        '#1877F2',
+                        '#EA4335',
+                        '#E4405F',
+                        '#FBBC04',
+                        '#6B7280'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { family: 'Roboto', size: 12 },
+                            padding: 16,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // Qualification Rate Chart
+        const qualRateCtx = document.getElementById('qualificationRateChart').getContext('2d');
+        new Chart(qualRateCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Organic', 'Google Search', 'Meta-FB', 'Meta-Insta', 'Google YouTube', 'Google Display'],
+                datasets: [{
+                    label: 'Qualification Rate (%)',
+                    data: [82.2, 76.5, 72.4, 68.9, 68.2, 64.8],
+                    backgroundColor: '#34A853',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // CPL Comparison Chart
+        const cplCtx = document.getElementById('cplComparisonChart').getContext('2d');
+        new Chart(cplCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Meta-FB', 'Meta-Insta', 'Google Display', 'Google Search', 'Google YouTube'],
+                datasets: [{
+                    label: 'Avg CPL (₹)',
+                    data: [1350, 1398, 1420, 1548, 1612],
+                    backgroundColor: '#667EEA',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Source Trend Chart
+        const trendCtx = document.getElementById('sourceTrendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [
+                    {
+                        label: 'Google Search',
+                        data: [65, 72, 68, 80],
+                        borderColor: '#4285F4',
+                        backgroundColor: 'rgba(66, 133, 244, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Meta-FB',
+                        data: [48, 52, 58, 57],
+                        borderColor: '#1877F2',
+                        backgroundColor: 'rgba(24, 119, 242, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'Google YouTube',
+                        data: [42, 45, 48, 47],
+                        borderColor: '#EA4335',
+                        backgroundColor: 'rgba(234, 67, 53, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { family: 'Roboto', size: 12 },
+                            padding: 12,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Dark Mode Script -->
+    <script src="js/dark-mode.js"></script>
+
+</body>
+</html>

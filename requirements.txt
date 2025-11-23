@@ -1,0 +1,8 @@
+streamlit
+pandas
+plotly
+numpy
+google-ads
+facebook_business
+google-auth-oauthlib
+openpyxl

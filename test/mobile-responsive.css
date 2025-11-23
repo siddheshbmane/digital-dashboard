@@ -1,0 +1,166 @@
+/* Mobile Responsive Styles for Lead Analytics Dashboard */
+/* Add this to the <style> section of each HTML page */
+
+/* Mobile-first breakpoints */
+@media (max-width: 640px) {
+    /* Typography adjustments */
+    h1 { font-size: 1.5rem !important; }
+    h2 { font-size: 1.25rem !important; }
+    h3 { font-size: 1.125rem !important; }
+
+    /* Hide sidebar on mobile by default */
+    .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        height: 100vh;
+        z-index: 60;
+        transition: left 0.3s;
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    /* Header adjustments */
+    header {
+        padding: 0.75rem 1rem !important;
+    }
+
+    header h1 {
+        font-size: 1.25rem !important;
+    }
+
+    /* Hide date inputs on mobile, show dropdown only */
+    header .flex.items-center.space-x-2:has(input[type="date"]) {
+        display: none !important;
+    }
+
+    /* Stack header buttons vertically */
+    header .flex.items-center.space-x-4 {
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 0.5rem;
+    }
+
+    /* KPI Cards - Single column */
+    .kpi-card {
+        margin-bottom: 1rem;
+    }
+
+    /* Charts - Reduce height on mobile */
+    .chart-container {
+        height: 250px !important;
+    }
+
+    /* Tables - Horizontal scroll */
+    .overflow-x-auto {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table {
+        font-size: 0.75rem !important;
+    }
+
+    table th,
+    table td {
+        padding: 0.5rem !important;
+        white-space: nowrap;
+    }
+
+    /* Buttons - Full width or stacked */
+    button.px-4 {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+
+    /* Filter sections - Stack vertically */
+    .grid.grid-cols-1.md\\:grid-cols-3,
+    .grid.grid-cols-1.md\\:grid-cols-4 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Hide non-essential columns in tables */
+    table .hide-mobile {
+        display: none !important;
+    }
+
+    /* Compact padding */
+    .px-6 {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+    }
+
+    .py-8 {
+        padding-top: 1.5rem !important;
+        padding-bottom: 1.5rem !important;
+    }
+
+    /* Source/Location cards - Single column */
+    .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+
+    /* Client comparison cards */
+    .grid.grid-cols-1.lg\\:grid-cols-3 {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+/* Tablet adjustments (641px - 1024px) */
+@media (min-width: 641px) and (max-width: 1024px) {
+    .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-4 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .grid.grid-cols-1.md\\:grid-cols-2.lg\\:grid-cols-3 {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .chart-container {
+        height: 280px !important;
+    }
+}
+
+/* Mobile sidebar overlay */
+@media (max-width: 640px) {
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 55;
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+}
+
+/* Mobile-friendly touch targets */
+@media (max-width: 640px) {
+    button,
+    a,
+    select,
+    input {
+        min-height: 44px;
+        min-width: 44px;
+    }
+}
+
+/* Horizontal scroll indicator for tables */
+@media (max-width: 640px) {
+    .table-scroll-hint::after {
+        content: "← Scroll →";
+        display: block;
+        text-align: center;
+        font-size: 0.75rem;
+        color: #6B7280;
+        padding: 0.5rem;
+        background: #F3F4F6;
+        border-top: 1px solid #E5E7EB;
+    }
+}

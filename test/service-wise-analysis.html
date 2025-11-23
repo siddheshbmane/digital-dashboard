@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Service/Product-wise Analysis - Lead Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="enhanced-theme.css">
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Service/Product-wise Analysis</h1>
+                    <p class="text-sm text-gray-500 mt-1">Track performance across different services and products</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="darkModeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                        <i class="fa-solid fa-download mr-2"></i>Export Report
+                    </button>
+                    <a href="index.html" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <option selected>All</option>
+                        <option>Tech Manufacturing Ltd</option>
+                        <option>EduTech Solutions</option>
+                        <option>HealthWellness Clinic</option>
+                        <option>RetailCorp Pvt Ltd</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-31">
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-refresh mr-2"></i>Refresh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards by Service/Product -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+
+            <!-- Digital Marketing Services -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-bullhorn text-blue-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Digital Marketing</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">342</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Conversion Rate</p>
+                        <p class="text-lg font-semibold text-green-600">15.8%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Total Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹42.5L</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg Deal Size:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,24,300</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Active Clients:</span>
+                        <span class="font-mono font-medium text-gray-900">18</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO Services -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-search text-green-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">SEO Services</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">245</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Conversion Rate</p>
+                        <p class="text-lg font-semibold text-green-600">18.2%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Total Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹28.7L</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg Deal Size:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,17,100</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Active Clients:</span>
+                        <span class="font-mono font-medium text-gray-900">14</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Web Development -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-purple-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-code text-purple-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Web Development</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">178</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Conversion Rate</p>
+                        <p class="text-lg font-semibold text-yellow-600">12.4%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Total Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹35.2L</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg Deal Size:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,97,800</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Active Clients:</span>
+                        <span class="font-mono font-medium text-gray-900">12</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media Management -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-pink-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-pink-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-share-nodes text-pink-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Social Media</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">298</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Conversion Rate</p>
+                        <p class="text-lg font-semibold text-green-600">16.5%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Total Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹24.8L</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg Deal Size:</span>
+                        <span class="font-mono font-medium text-gray-900">₹83,200</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Active Clients:</span>
+                        <span class="font-mono font-medium text-gray-900">16</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Marketing -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-yellow-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-pen-fancy text-yellow-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Content Marketing</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">156</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Conversion Rate</p>
+                        <p class="text-lg font-semibold text-yellow-600">14.1%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Total Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹18.2L</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg Deal Size:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,16,700</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Active Clients:</span>
+                        <span class="font-mono font-medium text-gray-900">11</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email Marketing -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-indigo-500">
+                <div class="flex items-center justify-between mb-4">
+                    <div class="flex items-center">
+                        <div class="w-12 h-12 bg-indigo-100 rounded-lg flex items-center justify-center mr-3">
+                            <i class="fa-solid fa-envelope text-indigo-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-sm font-medium text-gray-500">Email Marketing</h3>
+                            <p class="text-2xl font-semibold text-gray-900 font-mono">124</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-500">Conversion Rate</p>
+                        <p class="text-lg font-semibold text-yellow-600">11.3%</p>
+                    </div>
+                </div>
+                <div class="space-y-2 border-t pt-3">
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Total Revenue:</span>
+                        <span class="font-mono font-medium text-green-600">₹12.5L</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Avg Deal Size:</span>
+                        <span class="font-mono font-medium text-gray-900">₹1,00,800</span>
+                    </div>
+                    <div class="flex justify-between text-sm">
+                        <span class="text-gray-600">Active Clients:</span>
+                        <span class="font-mono font-medium text-gray-900">8</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+            <!-- Revenue by Service -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Revenue Distribution by Service</h3>
+                <div class="chart-container">
+                    <canvas id="revenueByServiceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Conversion Rate Comparison -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Conversion Rate by Service</h3>
+                <div class="chart-container">
+                    <canvas id="conversionRateChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Lead Volume by Service -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Lead Volume by Service</h3>
+                <div class="chart-container">
+                    <canvas id="leadVolumeChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Average Deal Size -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Average Deal Size by Service</h3>
+                <div class="chart-container">
+                    <canvas id="dealSizeChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Detailed Service Analysis Table -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50">
+                <h3 class="text-lg font-semibold text-gray-900">Detailed Service/Product Analysis</h3>
+                <p class="text-sm text-gray-600 mt-1">Complete breakdown of performance metrics by service</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Service/Product</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Total Leads</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Converted</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Conv. Rate</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Revenue</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Avg Deal Size</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Active Clients</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Pipeline Value</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-bullhorn text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Digital Marketing</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">342</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">54</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">15.8%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹42,50,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,24,300</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">18</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-blue-600">₹28,40,000</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-search text-green-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">SEO Services</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">245</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">45</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">18.2%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹28,70,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,17,100</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">14</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-blue-600">₹18,50,000</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-code text-purple-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Web Development</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">178</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">22</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">12.4%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹35,20,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,97,800</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">12</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-blue-600">₹32,80,000</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-share-nodes text-pink-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Social Media Management</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">298</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">49</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">16.5%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹24,80,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹83,200</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">16</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-blue-600">₹15,60,000</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-pen-fancy text-yellow-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Content Marketing</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">156</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">22</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">14.1%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹18,20,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,16,700</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">11</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-blue-600">₹12,40,000</td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-envelope text-indigo-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">Email Marketing</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">124</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">14</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">11.3%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹12,50,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,00,800</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">8</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-blue-600">₹8,90,000</td>
+                        </tr>
+                        <tr class="bg-purple-50 font-semibold border-t-2 border-purple-200">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900">TOTAL</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">1,343</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">206</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-200 text-purple-900">15.3%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-purple-900">₹1,61,90,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">₹1,20,600</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">79</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-purple-900">₹1,16,60,000</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Revenue by Service Chart
+        const revenueCtx = document.getElementById('revenueByServiceChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Digital Marketing', 'Web Development', 'SEO Services', 'Social Media', 'Content Marketing', 'Email Marketing'],
+                datasets: [{
+                    data: [4250000, 3520000, 2870000, 2480000, 1820000, 1250000],
+                    backgroundColor: [
+                        '#3B82F6',
+                        '#A855F7',
+                        '#10B981',
+                        '#EC4899',
+                        '#F59E0B',
+                        '#6366F1'
+                    ],
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 16,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // Conversion Rate Chart
+        const conversionCtx = document.getElementById('conversionRateChart').getContext('2d');
+        new Chart(conversionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['SEO Services', 'Social Media', 'Digital Marketing', 'Content Marketing', 'Web Development', 'Email Marketing'],
+                datasets: [{
+                    label: 'Conversion Rate (%)',
+                    data: [18.2, 16.5, 15.8, 14.1, 12.4, 11.3],
+                    backgroundColor: '#34A853',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 20,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Lead Volume Chart
+        const volumeCtx = document.getElementById('leadVolumeChart').getContext('2d');
+        new Chart(volumeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Digital Marketing', 'Social Media', 'SEO Services', 'Web Development', 'Content Marketing', 'Email Marketing'],
+                datasets: [{
+                    label: 'Total Leads',
+                    data: [342, 298, 245, 178, 156, 124],
+                    backgroundColor: '#667EEA',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Deal Size Chart
+        const dealSizeCtx = document.getElementById('dealSizeChart').getContext('2d');
+        new Chart(dealSizeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Web Dev', 'Digital Marketing', 'SEO', 'Content', 'Email', 'Social Media'],
+                datasets: [{
+                    label: 'Avg Deal Size (₹)',
+                    data: [197800, 124300, 117100, 116700, 100800, 83200],
+                    backgroundColor: '#F59E0B',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + (value/1000) + 'K';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+
+    <!-- Dark Mode Script -->
+    <script src="js/dark-mode.js"></script>
+
+</body>
+</html>

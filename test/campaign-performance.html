@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campaign Performance - Lead Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="enhanced-theme.css">
+    <style>
+        .hierarchy-level-1 { padding-left: 0; background: white; }
+        .hierarchy-level-2 { padding-left: 2rem; background: #F9FAFB; }
+        .hierarchy-level-3 { padding-left: 4rem; background: #F3F4F6; }
+
+        .expandable-row { cursor: pointer; transition: all 0.2s; }
+        .expandable-row:hover { background: #EEF2FF !important; }
+
+        .expand-icon { transition: transform 0.3s; }
+        .expand-icon.rotated { transform: rotate(90deg); }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Campaign Performance</h1>
+                    <p class="text-sm text-gray-500 mt-1">Hierarchical view: Campaign → AdSet/AdGroup → Ad/Creative</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="darkModeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                        <i class="fa-solid fa-download mr-2"></i>Export Report
+                    </button>
+                    <a href="index.html" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <option selected>All</option>
+                        <option>Tech Manufacturing Ltd</option>
+                        <option>EduTech Solutions</option>
+                        <option>HealthWellness Clinic</option>
+                        <option>RetailCorp Pvt Ltd</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-31">
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-refresh mr-2"></i>Refresh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Summary Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-2">Total Campaigns</h4>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">24</p>
+                    <p class="text-xs text-gray-500 mt-1">18 Active, 6 Paused</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-2">Total Spend</h4>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">₹12.45L</p>
+                    <p class="text-xs text-green-600 mt-1">↑ 12.5% vs last period</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-2">Avg. CPQL</h4>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">₹2,034</p>
+                    <p class="text-xs text-green-600 mt-1">↓ 1.8% vs last period</p>
+                </div>
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-2">Avg. ROI</h4>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">267%</p>
+                    <p class="text-xs text-green-600 mt-1">↑ 15.3% vs last period</p>
+                </div>
+            </div>
+
+        <!-- Performance Table -->
+        <div class="bg-white rounded-xl shadow-md p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Campaign Hierarchy</h3>
+                    <div class="flex items-center space-x-2">
+                        <button onclick="expandAll()" class="text-sm text-purple-600 hover:text-purple-700">
+                            <i class="fas fa-expand-alt mr-1"></i>Expand All
+                        </button>
+                        <button onclick="collapseAll()" class="text-sm text-purple-600 hover:text-purple-700">
+                            <i class="fas fa-compress-alt mr-1"></i>Collapse All
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full" id="campaignTable">
+                        <thead class="bg-gray-50 sticky top-0">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Platform</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Spend</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Clicks</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">CTR</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Leads</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Qualified</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">CPQL</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Revenue</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">ROI</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            
+                            <!-- Campaign 1 -->
+                            <tr class="expandable-row hierarchy-level-1" data-level="1" data-platform="google" onclick="toggleRow(this)">
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-chevron-right expand-icon text-gray-400 mr-3"></i>
+                                        <span class="font-semibold text-gray-900">Google_Search_Manufacturing_Nov25</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google</span></td>
+                                <td class="px-4 py-4 font-mono text-sm">₹1,45,000</td>
+                                <td class="px-4 py-4 font-mono text-sm">2,890</td>
+                                <td class="px-4 py-4 font-mono text-sm">5.2%</td>
+                                <td class="px-4 py-4 font-mono text-sm">95</td>
+                                <td class="px-4 py-4 font-mono text-sm">72</td>
+                                <td class="px-4 py-4 font-mono text-sm">₹2,014</td>
+                                <td class="px-4 py-4 font-mono text-sm text-green-600">₹6,20,000</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">328%</span></td>
+                            </tr>
+                            
+                            <!-- AdGroup 1.1 -->
+                            <tr class="hierarchy-level-2 hidden" data-parent="0" data-level="2">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-level-up-alt fa-rotate-90 text-gray-300 mr-3"></i>
+                                        <span class="text-gray-700">AdGroup: Precision Machining</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">AdGroup</span></td>
+                                <td class="px-4 py-3 font-mono text-sm">₹80,000</td>
+                                <td class="px-4 py-3 font-mono text-sm">1,560</td>
+                                <td class="px-4 py-3 font-mono text-sm">5.1%</td>
+                                <td class="px-4 py-3 font-mono text-sm">52</td>
+                                <td class="px-4 py-3 font-mono text-sm">38</td>
+                                <td class="px-4 py-3 font-mono text-sm">₹2,105</td>
+                                <td class="px-4 py-3 font-mono text-sm text-green-600">₹3,30,000</td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">313%</span></td>
+                            </tr>
+
+                            <!-- AdGroup 1.2 -->
+                            <tr class="hierarchy-level-2 hidden" data-parent="0" data-level="2">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-level-up-alt fa-rotate-90 text-gray-300 mr-3"></i>
+                                        <span class="text-gray-700">AdGroup: CNC Manufacturing</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">AdGroup</span></td>
+                                <td class="px-4 py-3 font-mono text-sm">₹65,000</td>
+                                <td class="px-4 py-3 font-mono text-sm">1,330</td>
+                                <td class="px-4 py-3 font-mono text-sm">5.4%</td>
+                                <td class="px-4 py-3 font-mono text-sm">43</td>
+                                <td class="px-4 py-3 font-mono text-sm">34</td>
+                                <td class="px-4 py-3 font-mono text-sm">₹1,912</td>
+                                <td class="px-4 py-3 font-mono text-sm text-green-600">₹2,90,000</td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">346%</span></td>
+                            </tr>
+
+                            <!-- Campaign 2 -->
+                            <tr class="expandable-row hierarchy-level-1" data-level="1" data-platform="google" onclick="toggleRow(this)">
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-chevron-right expand-icon text-gray-400 mr-3"></i>
+                                        <span class="font-semibold text-gray-900">Google_YouTube_TechManuf_Nov25</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google</span></td>
+                                <td class="px-4 py-4 font-mono text-sm">₹85,000</td>
+                                <td class="px-4 py-4 font-mono text-sm">1,420</td>
+                                <td class="px-4 py-4 font-mono text-sm">4.1%</td>
+                                <td class="px-4 py-4 font-mono text-sm">70</td>
+                                <td class="px-4 py-4 font-mono text-sm">54</td>
+                                <td class="px-4 py-4 font-mono text-sm">₹1,574</td>
+                                <td class="px-4 py-4 font-mono text-sm text-green-600">₹4,10,000</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">382%</span></td>
+                            </tr>
+
+                            <!-- AdGroup 2.1 -->
+                            <tr class="hierarchy-level-2 hidden" data-parent="2" data-level="2">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-level-up-alt fa-rotate-90 text-gray-300 mr-3"></i>
+                                        <span class="text-gray-700">AdGroup: Video - Capabilities</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">AdGroup</span></td>
+                                <td class="px-4 py-3 font-mono text-sm">₹50,000</td>
+                                <td class="px-4 py-3 font-mono text-sm">850</td>
+                                <td class="px-4 py-3 font-mono text-sm">4.3%</td>
+                                <td class="px-4 py-3 font-mono text-sm">42</td>
+                                <td class="px-4 py-3 font-mono text-sm">32</td>
+                                <td class="px-4 py-3 font-mono text-sm">₹1,563</td>
+                                <td class="px-4 py-3 font-mono text-sm text-green-600">₹2,40,000</td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">380%</span></td>
+                            </tr>
+
+                            <!-- Campaign 3 -->
+                            <tr class="expandable-row hierarchy-level-1" data-level="1" data-platform="meta" onclick="toggleRow(this)">
+                                <td class="px-4 py-4">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-chevron-right expand-icon text-gray-400 mr-3"></i>
+                                        <span class="font-semibold text-gray-900">Meta_FB_Manufacturing_Nov25</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Meta</span></td>
+                                <td class="px-4 py-4 font-mono text-sm">₹95,000</td>
+                                <td class="px-4 py-4 font-mono text-sm">2,110</td>
+                                <td class="px-4 py-4 font-mono text-sm">3.8%</td>
+                                <td class="px-4 py-4 font-mono text-sm">78</td>
+                                <td class="px-4 py-4 font-mono text-sm">60</td>
+                                <td class="px-4 py-4 font-mono text-sm">₹1,583</td>
+                                <td class="px-4 py-4 font-mono text-sm text-green-600">₹3,50,000</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">268%</span></td>
+                            </tr>
+
+                            <!-- AdSet 3.1 -->
+                            <tr class="hierarchy-level-2 hidden" data-parent="4" data-level="2">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-level-up-alt fa-rotate-90 text-gray-300 mr-3"></i>
+                                        <span class="text-gray-700">AdSet: Manufacturing - Feed</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">AdSet</span></td>
+                                <td class="px-4 py-3 font-mono text-sm">₹60,000</td>
+                                <td class="px-4 py-3 font-mono text-sm">1,320</td>
+                                <td class="px-4 py-3 font-mono text-sm">3.9%</td>
+                                <td class="px-4 py-3 font-mono text-sm">48</td>
+                                <td class="px-4 py-3 font-mono text-sm">36</td>
+                                <td class="px-4 py-3 font-mono text-sm">₹1,667</td>
+                                <td class="px-4 py-3 font-mono text-sm text-green-600">₹2,10,000</td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">250%</span></td>
+                            </tr>
+
+                            <!-- AdSet 3.2 -->
+                            <tr class="hierarchy-level-2 hidden" data-parent="4" data-level="2">
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center">
+                                        <i class="fas fa-level-up-alt fa-rotate-90 text-gray-300 mr-3"></i>
+                                        <span class="text-gray-700">AdSet: Manufacturing - Stories</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">AdSet</span></td>
+                                <td class="px-4 py-3 font-mono text-sm">₹35,000</td>
+                                <td class="px-4 py-3 font-mono text-sm">790</td>
+                                <td class="px-4 py-3 font-mono text-sm">3.7%</td>
+                                <td class="px-4 py-3 font-mono text-sm">30</td>
+                                <td class="px-4 py-3 font-mono text-sm">24</td>
+                                <td class="px-4 py-3 font-mono text-sm">₹1,458</td>
+                                <td class="px-4 py-3 font-mono text-sm text-green-600">₹1,40,000</td>
+                                <td class="px-4 py-3"><span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">300%</span></td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+        </div>
+
+    </main>
+
+    <script>
+        function toggleRow(row) {
+            const rowIndex = Array.from(row.parentElement.children).indexOf(row);
+            const icon = row.querySelector('.expand-icon');
+            const childRows = document.querySelectorAll(`[data-parent="${rowIndex}"]`);
+            
+            icon.classList.toggle('rotated');
+            
+            childRows.forEach(child => {
+                child.classList.toggle('hidden');
+            });
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.hierarchy-level-2, .hierarchy-level-3').forEach(row => {
+                row.classList.remove('hidden');
+            });
+            document.querySelectorAll('.expand-icon').forEach(icon => {
+                icon.classList.add('rotated');
+            });
+        }
+
+        function collapseAll() {
+            document.querySelectorAll('.hierarchy-level-2, .hierarchy-level-3').forEach(row => {
+                row.classList.add('hidden');
+            });
+            document.querySelectorAll('.expand-icon').forEach(icon => {
+                icon.classList.remove('rotated');
+            });
+        }
+
+        function searchTable() {
+            const input = document.getElementById('searchInput').value.toLowerCase();
+            const rows = document.querySelectorAll('.hierarchy-level-1');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(input) ? '' : 'none';
+            });
+        }
+
+        function filterTable() {
+            const filter = document.getElementById('platformFilter').value;
+            const rows = document.querySelectorAll('.hierarchy-level-1');
+            
+            rows.forEach(row => {
+                const platform = row.getAttribute('data-platform');
+                if (filter === 'all' || platform === filter) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+    </script>
+
+    <!-- Dark Mode Script -->
+    <script src="js/dark-mode.js"></script>
+
+</body>
+</html>

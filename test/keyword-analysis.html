@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Keyword-wise Analysis - Lead Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="enhanced-theme.css">
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Keyword-wise Analysis</h1>
+                    <p class="text-sm text-gray-500 mt-1">Analyze lead generation performance by search keywords and ad groups</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="darkModeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                        <i class="fa-solid fa-download mr-2"></i>Export Report
+                    </button>
+                    <a href="index.html" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <option selected>All</option>
+                        <option>Tech Manufacturing Ltd</option>
+                        <option>EduTech Solutions</option>
+                        <option>HealthWellness Clinic</option>
+                        <option>RetailCorp Pvt Ltd</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-31">
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-refresh mr-2"></i>Refresh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top Performing Keywords Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+
+            <!-- Keyword 1 -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-green-500">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-key text-green-600 text-lg"></i>
+                    </div>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">#1</span>
+                </div>
+                <h3 class="text-sm font-medium text-gray-500 mb-1">digital marketing agency</h3>
+                <p class="text-2xl font-semibold text-gray-900 font-mono mb-3">142 Leads</p>
+                <div class="space-y-1 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">CTR:</span>
+                        <span class="font-semibold text-green-600">3.8%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Conv. Rate:</span>
+                        <span class="font-semibold text-green-600">18.3%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">CPC:</span>
+                        <span class="font-semibold text-gray-900">₹42.50</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keyword 2 -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-blue-500">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-key text-blue-600 text-lg"></i>
+                    </div>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">#2</span>
+                </div>
+                <h3 class="text-sm font-medium text-gray-500 mb-1">seo services near me</h3>
+                <p class="text-2xl font-semibold text-gray-900 font-mono mb-3">118 Leads</p>
+                <div class="space-y-1 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">CTR:</span>
+                        <span class="font-semibold text-green-600">4.2%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Conv. Rate:</span>
+                        <span class="font-semibold text-green-600">16.8%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">CPC:</span>
+                        <span class="font-semibold text-gray-900">₹38.20</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keyword 3 -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-purple-500">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-key text-purple-600 text-lg"></i>
+                    </div>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">#3</span>
+                </div>
+                <h3 class="text-sm font-medium text-gray-500 mb-1">web development company</h3>
+                <p class="text-2xl font-semibold text-gray-900 font-mono mb-3">96 Leads</p>
+                <div class="space-y-1 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">CTR:</span>
+                        <span class="font-semibold text-yellow-600">2.9%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Conv. Rate:</span>
+                        <span class="font-semibold text-green-600">15.2%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">CPC:</span>
+                        <span class="font-semibold text-gray-900">₹56.80</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Keyword 4 -->
+            <div class="bg-white rounded-lg shadow-sm p-6 border-l-4 border-yellow-500">
+                <div class="flex items-center justify-between mb-2">
+                    <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                        <i class="fa-solid fa-key text-yellow-600 text-lg"></i>
+                    </div>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">#4</span>
+                </div>
+                <h3 class="text-sm font-medium text-gray-500 mb-1">social media marketing</h3>
+                <p class="text-2xl font-semibold text-gray-900 font-mono mb-3">88 Leads</p>
+                <div class="space-y-1 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">CTR:</span>
+                        <span class="font-semibold text-green-600">3.5%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">Conv. Rate:</span>
+                        <span class="font-semibold text-yellow-600">14.7%</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-600">CPC:</span>
+                        <span class="font-semibold text-gray-900">₹32.40</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Charts Row -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+            <!-- Top Keywords by Leads -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Top 10 Keywords by Lead Volume</h3>
+                <div class="chart-container">
+                    <canvas id="topKeywordsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Keyword Performance CTR vs Conv Rate -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">CTR vs Conversion Rate</h3>
+                <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Cost Analysis -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Average CPC by Top Keywords</h3>
+                <div class="chart-container">
+                    <canvas id="cpcChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Keyword Trend -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Keyword Performance Trend (Last 4 Weeks)</h3>
+                <div class="chart-container">
+                    <canvas id="keywordTrendChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Detailed Keyword Analysis Table -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden mb-8">
+            <div class="px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-purple-50 to-blue-50">
+                <h3 class="text-lg font-semibold text-gray-900">Detailed Keyword Performance Analysis</h3>
+                <p class="text-sm text-gray-600 mt-1">Complete breakdown of all keywords with performance metrics</p>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Keyword</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Match Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Impressions</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Clicks</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">CTR</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Leads</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Conv. Rate</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">CPC</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Cost</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Quality Score</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-key text-green-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">digital marketing agency</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Phrase</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">156,240</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">5,937</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">3.8%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">142</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">18.3%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹42.50</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹2,52,323</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">9/10</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-key text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">seo services near me</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">Exact</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">98,450</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">4,135</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">4.2%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">118</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">16.8%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹38.20</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,57,957</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">10/10</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-key text-purple-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">web development company</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Phrase</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">124,680</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">3,616</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">2.9%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">96</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">15.2%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹56.80</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹2,05,389</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">8/10</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-key text-yellow-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">social media marketing</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-200 text-gray-800">Broad</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">186,920</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">6,542</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">3.5%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">88</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">14.7%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹32.40</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹2,11,961</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">7/10</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-key text-pink-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">ppc management services</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Phrase</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">78,540</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">2,749</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">3.5%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">76</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">17.2%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹48.90</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,34,426</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">9/10</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-key text-indigo-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">content marketing agency</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-100 text-purple-800">Exact</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">64,280</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">2,379</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">3.7%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">68</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">14.2%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹44.30</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,05,389</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">8/10</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-key text-orange-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">email marketing software</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-200 text-gray-800">Broad</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">142,850</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">3,999</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">2.8%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">62</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">13.8%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹28.60</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,14,371</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">7/10</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <div class="flex items-center">
+                                    <i class="fa-solid fa-key text-teal-600 mr-2"></i>
+                                    <span class="text-sm font-medium text-gray-900">website design services</span>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Phrase</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">96,720</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">2,901</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">3.0%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-semibold text-gray-900">58</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">12.5%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹52.30</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,51,722</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">8/10</span>
+                            </td>
+                        </tr>
+                        <tr class="bg-purple-50 font-semibold border-t-2 border-purple-200">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-bold text-gray-900" colspan="2">TOTAL (Top 8 Keywords)</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">948,680</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">32,258</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-200 text-purple-900">3.4%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">708</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-200 text-purple-900">15.3%</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-gray-900">₹43.12</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono font-bold text-purple-900">₹13,91,538</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-purple-200 text-purple-900">8.4/10</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-6 py-3 bg-gray-50 border-t border-gray-200">
+                <p class="text-xs text-gray-500">
+                    <i class="fa-solid fa-info-circle mr-1"></i>
+                    <strong>Note:</strong> Match types include Exact (precise matches), Phrase (variations with additional words), and Broad (wider match variations). Quality Score is Google's rating of keyword and ad relevance (1-10).
+                </p>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Top Keywords Chart
+        const topKeywordsCtx = document.getElementById('topKeywordsChart').getContext('2d');
+        new Chart(topKeywordsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['digital marketing agency', 'seo services near me', 'web development company', 'social media marketing', 'ppc management services', 'content marketing agency', 'email marketing software', 'website design services', 'online advertising', 'branding agency'],
+                datasets: [{
+                    label: 'Leads',
+                    data: [142, 118, 96, 88, 76, 68, 62, 58, 52, 48],
+                    backgroundColor: '#667EEA',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Performance Chart (CTR vs Conv Rate)
+        const performanceCtx = document.getElementById('performanceChart').getContext('2d');
+        new Chart(performanceCtx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'Keywords',
+                    data: [
+                        {x: 3.8, y: 18.3, label: 'digital marketing agency'},
+                        {x: 4.2, y: 16.8, label: 'seo services near me'},
+                        {x: 2.9, y: 15.2, label: 'web development company'},
+                        {x: 3.5, y: 14.7, label: 'social media marketing'},
+                        {x: 3.5, y: 17.2, label: 'ppc management services'},
+                        {x: 3.7, y: 14.2, label: 'content marketing agency'},
+                        {x: 2.8, y: 13.8, label: 'email marketing software'},
+                        {x: 3.0, y: 12.5, label: 'website design services'}
+                    ],
+                    backgroundColor: '#34A853',
+                    borderColor: '#fff',
+                    borderWidth: 2,
+                    pointRadius: 8
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'CTR (%)'
+                        },
+                        beginAtZero: true
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Conversion Rate (%)'
+                        },
+                        beginAtZero: true
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // CPC Chart
+        const cpcCtx = document.getElementById('cpcChart').getContext('2d');
+        new Chart(cpcCtx, {
+            type: 'bar',
+            data: {
+                labels: ['email mkt', 'social media', 'seo services', 'digital mkt', 'content mkt', 'ppc mgmt', 'website design', 'web dev'],
+                datasets: [{
+                    label: 'Avg CPC (₹)',
+                    data: [28.60, 32.40, 38.20, 42.50, 44.30, 48.90, 52.30, 56.80],
+                    backgroundColor: '#F59E0B',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // Keyword Trend Chart
+        const trendCtx = document.getElementById('keywordTrendChart').getContext('2d');
+        new Chart(trendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4'],
+                datasets: [
+                    {
+                        label: 'digital marketing agency',
+                        data: [32, 38, 35, 37],
+                        borderColor: '#10B981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'seo services near me',
+                        data: [28, 30, 32, 28],
+                        borderColor: '#3B82F6',
+                        backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: 'web development company',
+                        data: [22, 25, 24, 25],
+                        borderColor: '#A855F7',
+                        backgroundColor: 'rgba(168, 85, 247, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 12,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Dark Mode Script -->
+    <script src="js/dark-mode.js"></script>
+
+</body>
+</html>

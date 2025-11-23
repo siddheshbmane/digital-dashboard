@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platform Comparison - Lead Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="enhanced-theme.css">
+    <style>
+        .sidebar {
+            width: 260px;
+        }
+
+        .winner-badge {
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        .chart-container {
+            position: relative;
+            height: 350px;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center space-x-4">
+                <button onclick="window.location='index.html'" class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-purple-600">Olio Global AdTech</h1>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 bg-gray-50 px-4 py-2 rounded-lg">
+                    <i class="fas fa-calendar text-purple-600"></i>
+                    <select class="bg-transparent outline-none text-sm font-medium">
+                        <option value="30days" selected>Last 30 Days</option>
+                        <option value="7days">Last 7 Days</option>
+                        <option value="thismonth">This Month</option>
+                        <option value="lastmonth">Last Month</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center space-x-2">
+                    <input type="date" class="px-3 py-2 border rounded-lg text-sm" value="2025-10-12">
+                    <span class="text-gray-500">to</span>
+                    <input type="date" class="px-3 py-2 border rounded-lg text-sm" value="2025-11-11">
+                </div>
+
+                <button id="darkModeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-bell text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                        AM
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex pt-18">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar bg-white shadow-lg fixed left-0 top-18 bottom-0 overflow-y-auto">
+                        <nav class="py-4">
+                <!-- Dashboard -->
+                <div class="px-4 mb-2">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Dashboard</h3>
+                </div>
+                <a href="index.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-chart-line w-6"></i>
+                    <span class="ml-3 sidebar-text">Master Summary</span>
+                </a>
+
+                <!-- Client Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Client Reports</h3>
+                </div>
+                <a href="client-deepdive.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-building w-6"></i>
+                    <span class="ml-3 sidebar-text">Client Deep-Dive</span>
+                </a>
+                <a href="client-comparison.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-balance-scale w-6"></i>
+                    <span class="ml-3 sidebar-text">Client Comparison</span>
+                </a>
+
+                <!-- Campaign & Ad Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Campaign & Ads</h3>
+                </div>
+                <a href="campaign-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-megaphone w-6"></i>
+                    <span class="ml-3 sidebar-text">Campaign Performance</span>
+                </a>
+                <a href="ad-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-ad w-6"></i>
+                    <span class="ml-3 sidebar-text">Ad Performance</span>
+                </a>
+                <a href="creative-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-palette w-6"></i>
+                    <span class="ml-3 sidebar-text">Creative Performance</span>
+                </a>
+                <a href="platform-comparison.html" class="nav-item active flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-chart-bar w-6"></i>
+                    <span class="ml-3 sidebar-text">Platform Comparison</span>
+                </a>
+
+                <!-- Lead Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Lead Analytics</h3>
+                </div>
+                <a href="lead-stage-funnel.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-filter w-6"></i>
+                    <span class="ml-3 sidebar-text">Lead Stage Funnel</span>
+                </a>
+                <a href="lead-source-analysis.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-bullseye w-6"></i>
+                    <span class="ml-3 sidebar-text">Lead Source Analysis</span>
+                </a>
+                <a href="geographic-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-map-marker-alt w-6"></i>
+                    <span class="ml-3 sidebar-text">Geographic Performance</span>
+                </a>
+                <a href="service-wise-analysis.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-briefcase w-6"></i>
+                    <span class="ml-3 sidebar-text">Service/Product Analysis</span>
+                </a>
+                <a href="keyword-analysis.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-key w-6"></i>
+                    <span class="ml-3 sidebar-text">Keyword Analysis</span>
+                </a>
+
+                <!-- Financial Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Financial</h3>
+                </div>
+                <a href="budget-vs-actual.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-wallet w-6"></i>
+                    <span class="ml-3 sidebar-text">Budget vs Actual</span>
+                </a>
+                <a href="cost-variance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-chart-area w-6"></i>
+                    <span class="ml-3 sidebar-text">Cost Variance</span>
+                </a>
+                <a href="revenue-attribution.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-rupee-sign w-6"></i>
+                    <span class="ml-3 sidebar-text">Revenue Attribution</span>
+                </a>
+
+                <!-- Trend Analysis -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Trends</h3>
+                </div>
+                <a href="time-trends.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-clock w-6"></i>
+                    <span class="ml-3 sidebar-text">Time-based Trends</span>
+                </a>
+
+                <!-- Data Upload -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Data Management</h3>
+                </div>
+                <a href="upload.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-upload w-6"></i>
+                    <span class="ml-3 sidebar-text">Upload Data</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 p-6 ml-64">
+        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <option selected>All</option>
+                        <option>Tech Manufacturing Ltd</option>
+                        <option>EduTech Solutions</option>
+                        <option>HealthWellness Clinic</option>
+                        <option>RetailCorp Pvt Ltd</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-31">
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-refresh mr-2"></i>Refresh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Page Header -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800">Platform Comparison Report</h2>
+                        <p class="text-gray-600 mt-1">Side-by-side comparison: Google Ads vs Meta Ads (Oct 12, 2025 - Nov 11, 2025)</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                            <i class="fas fa-file-excel text-green-600 mr-2"></i>Export Excel
+                        </button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                            <i class="fas fa-file-pdf text-red-600 mr-2"></i>Export PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="bg-white rounded-xl shadow-md p-4 mb-6">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center space-x-2">
+                        <label class="text-sm font-medium text-gray-700">Filter by Client:</label>
+                        <select class="px-3 py-2 border rounded-lg text-sm">
+                            <option value="all" selected>All Clients</option>
+                            <option value="techmanufacturing">Tech Manufacturing Ltd</option>
+                            <option value="edutech">EduTech Solutions</option>
+                            <option value="healthwellness">HealthWellness Clinic</option>
+                            <option value="realestate">RealEstate Pro</option>
+                            <option value="financeadvisors">Finance Advisors Inc</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Platform Winner Summary -->
+            <div class="bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl shadow-lg p-6 mb-6 text-white">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h3 class="text-2xl font-bold mb-2">Overall Performance Winner</h3>
+                        <p class="text-purple-100">Based on CPQL, ROI, and Qualification Rate</p>
+                    </div>
+                    <div class="text-center bg-white/20 backdrop-blur-sm rounded-xl p-6">
+                        <i class="fab fa-google text-5xl mb-2"></i>
+                        <p class="text-xl font-bold">Google Ads</p>
+                        <p class="text-sm text-purple-100">Wins in 7/12 metrics</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Head-to-Head Metrics Comparison -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+
+                <!-- Total Spend -->
+                <div class="comparison-card bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-4">Total Spend</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium">Google Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">₹7,20,000</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 58%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-meta text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium">Meta Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">₹5,25,000</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-700 h-2 rounded-full" style="width: 42%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-600">
+                        Google spends <span class="font-semibold text-blue-600">37% more</span>
+                    </div>
+                </div>
+
+                <!-- Total Leads -->
+                <div class="comparison-card bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-4">Total Leads</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium">Google Ads</span>
+                                    <span class="winner-badge ml-2 text-yellow-500">
+                                        <i class="fas fa-crown"></i>
+                                    </span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">465</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 55%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-meta text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium">Meta Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">382</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-700 h-2 rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-600">
+                        Google generates <span class="font-semibold text-green-600">22% more leads</span>
+                    </div>
+                </div>
+
+                <!-- Qualified Leads -->
+                <div class="comparison-card bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-4">Qualified Leads</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium">Google Ads</span>
+                                    <span class="winner-badge ml-2 text-yellow-500">
+                                        <i class="fas fa-crown"></i>
+                                    </span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">342</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full" style="width: 56%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-meta text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium">Meta Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">270</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 44%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-600">
+                        Google delivers <span class="font-semibold text-green-600">27% more qualified leads</span>
+                    </div>
+                </div>
+
+                <!-- Qualification Rate -->
+                <div class="comparison-card bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-4">Qualification Rate</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium">Google Ads</span>
+                                    <span class="winner-badge ml-2 text-yellow-500">
+                                        <i class="fas fa-crown"></i>
+                                    </span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">73.5%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full" style="width: 73.5%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-meta text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium">Meta Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">70.7%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 70.7%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-600">
+                        Google has <span class="font-semibold text-green-600">3.9% higher</span> qualification rate
+                    </div>
+                </div>
+
+                <!-- Average CPL -->
+                <div class="comparison-card bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-4">Average CPL</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium">Google Ads</span>
+                                    <span class="winner-badge ml-2 text-yellow-500">
+                                        <i class="fas fa-crown"></i>
+                                    </span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">₹1,548</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-600 h-2 rounded-full" style="width: 47%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-meta text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium">Meta Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">₹1,374</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-blue-700 h-2 rounded-full" style="width: 53%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-600">
+                        Meta is <span class="font-semibold text-green-600">₹174 cheaper</span> per lead
+                    </div>
+                </div>
+
+                <!-- Average CPQL -->
+                <div class="comparison-card bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-4">Average CPQL</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium">Google Ads</span>
+                                    <span class="winner-badge ml-2 text-yellow-500">
+                                        <i class="fas fa-crown"></i>
+                                    </span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">₹2,105</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-purple-600 h-2 rounded-full" style="width: 49%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-meta text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium">Meta Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">₹1,944</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-purple-500 h-2 rounded-full" style="width: 51%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-600">
+                        Meta is <span class="font-semibold text-green-600">₹161 cheaper</span> per qualified lead
+                    </div>
+                </div>
+
+                <!-- Average CTR -->
+                <div class="comparison-card bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-4">Average CTR</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium">Google Ads</span>
+                                    <span class="winner-badge ml-2 text-yellow-500">
+                                        <i class="fas fa-crown"></i>
+                                    </span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">4.8%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-indigo-600 h-2 rounded-full" style="width: 56%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-meta text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium">Meta Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">3.7%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-indigo-500 h-2 rounded-full" style="width: 44%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-600">
+                        Google has <span class="font-semibold text-green-600">30% higher CTR</span>
+                    </div>
+                </div>
+
+                <!-- Total Revenue -->
+                <div class="comparison-card bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-4">Total Revenue</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium">Google Ads</span>
+                                    <span class="winner-badge ml-2 text-yellow-500">
+                                        <i class="fas fa-crown"></i>
+                                    </span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">₹26.5L</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-600 h-2 rounded-full" style="width: 58%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-meta text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium">Meta Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">₹19.2L</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-green-500 h-2 rounded-full" style="width: 42%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-600">
+                        Google generates <span class="font-semibold text-green-600">38% more revenue</span>
+                    </div>
+                </div>
+
+                <!-- ROI -->
+                <div class="comparison-card bg-white rounded-xl shadow-md p-6">
+                    <h4 class="text-sm font-medium text-gray-600 mb-4">Overall ROI</h4>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-google text-blue-600 mr-2"></i>
+                                    <span class="text-sm font-medium">Google Ads</span>
+                                    <span class="winner-badge ml-2 text-yellow-500">
+                                        <i class="fas fa-crown"></i>
+                                    </span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">268%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-500 h-2 rounded-full" style="width: 52%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <div class="flex items-center">
+                                    <i class="fab fa-meta text-blue-700 mr-2"></i>
+                                    <span class="text-sm font-medium">Meta Ads</span>
+                                </div>
+                                <span class="text-lg font-bold font-mono">266%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-yellow-400 h-2 rounded-full" style="width: 48%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mt-3 text-center text-sm text-gray-600">
+                        Google has <span class="font-semibold text-green-600">0.75% higher ROI</span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Visualizations -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+                <!-- Cost Breakdown -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Spend Distribution</h3>
+                    <div class="chart-container">
+                        <canvas id="spendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Revenue Attribution -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Revenue Attribution</h3>
+                    <div class="chart-container">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Platform Efficiency Radar Chart -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Platform Efficiency Score</h3>
+                <p class="text-sm text-gray-600 mb-4">Normalized performance metrics across key dimensions</p>
+                <div style="height: 400px; max-width: 600px; margin: 0 auto;">
+                    <canvas id="radarChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Detailed Metrics Table -->
+            <div class="bg-white rounded-xl shadow-md p-6">
+                <h3 class="text-lg font-semibold text-gray-800 mb-4">Detailed Metrics Comparison</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Metric</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Google Ads</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Meta Ads</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Difference</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Winner</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-4 py-4 font-medium">Total Spend</td>
+                                <td class="px-4 py-4 font-mono">₹7,20,000</td>
+                                <td class="px-4 py-4 font-mono">₹5,25,000</td>
+                                <td class="px-4 py-4 text-red-600 font-mono">+37%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-gray-100 text-gray-800 rounded text-xs">N/A</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">Total Impressions</td>
+                                <td class="px-4 py-4 font-mono">2,45,000</td>
+                                <td class="px-4 py-4 font-mono">3,15,000</td>
+                                <td class="px-4 py-4 text-red-600 font-mono">-22%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Meta</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">Total Clicks</td>
+                                <td class="px-4 py-4 font-mono">11,760</td>
+                                <td class="px-4 py-4 font-mono">11,655</td>
+                                <td class="px-4 py-4 text-green-600 font-mono">+0.9%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">Average CTR</td>
+                                <td class="px-4 py-4 font-mono">4.8%</td>
+                                <td class="px-4 py-4 font-mono">3.7%</td>
+                                <td class="px-4 py-4 text-green-600 font-mono">+30%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">Average CPC</td>
+                                <td class="px-4 py-4 font-mono">₹61.22</td>
+                                <td class="px-4 py-4 font-mono">₹45.05</td>
+                                <td class="px-4 py-4 text-red-600 font-mono">+36%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Meta</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">Total Leads</td>
+                                <td class="px-4 py-4 font-mono">465</td>
+                                <td class="px-4 py-4 font-mono">382</td>
+                                <td class="px-4 py-4 text-green-600 font-mono">+22%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">Qualified Leads</td>
+                                <td class="px-4 py-4 font-mono">342</td>
+                                <td class="px-4 py-4 font-mono">270</td>
+                                <td class="px-4 py-4 text-green-600 font-mono">+27%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">Qualification Rate</td>
+                                <td class="px-4 py-4 font-mono">73.5%</td>
+                                <td class="px-4 py-4 font-mono">70.7%</td>
+                                <td class="px-4 py-4 text-green-600 font-mono">+3.9%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">CPL</td>
+                                <td class="px-4 py-4 font-mono">₹1,548</td>
+                                <td class="px-4 py-4 font-mono">₹1,374</td>
+                                <td class="px-4 py-4 text-red-600 font-mono">+13%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Meta</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">CPQL</td>
+                                <td class="px-4 py-4 font-mono">₹2,105</td>
+                                <td class="px-4 py-4 font-mono">₹1,944</td>
+                                <td class="px-4 py-4 text-red-600 font-mono">+8%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Meta</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">Total Revenue</td>
+                                <td class="px-4 py-4 font-mono">₹26,50,000</td>
+                                <td class="px-4 py-4 font-mono">₹19,17,500</td>
+                                <td class="px-4 py-4 text-green-600 font-mono">+38%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google</span></td>
+                            </tr>
+                            <tr>
+                                <td class="px-4 py-4 font-medium">ROI</td>
+                                <td class="px-4 py-4 font-mono">268%</td>
+                                <td class="px-4 py-4 font-mono">266%</td>
+                                <td class="px-4 py-4 text-green-600 font-mono">+0.75%</td>
+                                <td class="px-4 py-4"><span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google</span></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Spend Distribution Chart
+        const spendCtx = document.getElementById('spendChart').getContext('2d');
+        new Chart(spendCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Google Ads', 'Meta Ads'],
+                datasets: [{
+                    data: [7.20, 5.25],
+                    backgroundColor: ['#4285F4', '#1877F2'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ₹' + context.parsed + 'L';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Revenue Attribution Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Google Ads', 'Meta Ads'],
+                datasets: [{
+                    data: [26.5, 19.2],
+                    backgroundColor: ['#34A853', '#FBBC04'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ₹' + context.parsed + 'L';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Platform Efficiency Radar Chart
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: ['Lead Volume', 'Qualification Rate', 'CTR', 'Cost Efficiency', 'Revenue', 'ROI'],
+                datasets: [{
+                    label: 'Google Ads',
+                    data: [82, 85, 92, 75, 85, 88],
+                    borderColor: '#4285F4',
+                    backgroundColor: 'rgba(66, 133, 244, 0.2)',
+                    pointBackgroundColor: '#4285F4',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#4285F4'
+                }, {
+                    label: 'Meta Ads',
+                    data: [68, 80, 70, 85, 62, 87],
+                    borderColor: '#1877F2',
+                    backgroundColor: 'rgba(24, 119, 242, 0.2)',
+                    pointBackgroundColor: '#1877F2',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#1877F2'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    r: {
+                        beginAtZero: true,
+                        max: 100,
+                        ticks: {
+                            stepSize: 20
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- Mobile Sidebar Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+
+            // Close sidebar when clicking nav links on mobile
+            const navLinks = sidebar.querySelectorAll('.nav-item');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 640) {
+                        sidebar.classList.remove('active');
+                        sidebarOverlay.classList.remove('active');
+                    }
+                });
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 640) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+    <!-- Dark Mode Script -->
+    <script src="js/dark-mode.js"></script>
+
+</body>
+</html>

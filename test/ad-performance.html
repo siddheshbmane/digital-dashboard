@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad Performance Analysis - Lead Analytics Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="enhanced-theme.css">
+    <style>
+        .chart-container {
+            position: relative;
+            height: 300px;
+        }
+        .performance-score {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+        .score-excellent { color: #34A853; }
+        .score-good { color: #FBBC04; }
+        .score-poor { color: #EA4335; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-2xl font-semibold text-gray-900">Individual Ad Performance</h1>
+                    <p class="text-sm text-gray-500 mt-1">Analyze performance of individual ads</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <button id="darkModeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                    <button class="px-4 py-2 bg-white border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition">
+                        <i class="fa-solid fa-download mr-2"></i>Export Report
+                    </button>
+                    <a href="index.html" class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-arrow-left mr-2"></i>Back to Dashboard
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">        <!-- Filters -->
+        <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">Customer</label>
+                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent">
+                        <option selected>All</option>
+                        <option>Tech Manufacturing Ltd</option>
+                        <option>EduTech Solutions</option>
+                        <option>HealthWellness Clinic</option>
+                        <option>RetailCorp Pvt Ltd</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">From Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-01">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-2">To Date</label>
+                    <input type="date" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent" value="2024-01-31">
+                </div>
+                <div class="flex items-end">
+                    <button class="w-full px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-refresh mr-2"></i>Refresh Data
+                    </button>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <!-- Top Performing Ads -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-900 mb-4">Top 5 Performing Ads</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Ad 1 -->
+                <div class="bg-white rounded-lg shadow-sm p-6 ad-card border-t-4 border-green-500">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-green-100 text-green-800 rounded-full font-bold text-sm mr-2">1</span>
+                                <h3 class="text-sm font-medium text-gray-500">Ad_Precision_001</h3>
+                            </div>
+                            <p class="text-xs text-gray-400">Google Search • Campaign 1</p>
+                        </div>
+                    </div>
+                    <div class="text-center mb-4 py-4 bg-green-50 rounded-lg">
+                        <p class="text-xs text-gray-500 mb-1">Performance Score</p>
+                        <p class="performance-score score-excellent">95</p>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Spend:</span>
+                            <span class="font-mono font-semibold text-gray-900">₹40,000</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Leads:</span>
+                            <span class="font-mono font-semibold text-gray-900">28</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">CPL:</span>
+                            <span class="font-mono font-semibold text-green-600">₹1,429</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">ROI:</span>
+                            <span class="font-mono font-semibold text-green-600">445%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ad 2 -->
+                <div class="bg-white rounded-lg shadow-sm p-6 ad-card border-t-4 border-green-500">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-green-100 text-green-800 rounded-full font-bold text-sm mr-2">2</span>
+                                <h3 class="text-sm font-medium text-gray-500">video_Ad_Manufacturing_001</h3>
+                            </div>
+                            <p class="text-xs text-gray-400">Meta-FB • Campaign 3</p>
+                        </div>
+                    </div>
+                    <div class="text-center mb-4 py-4 bg-green-50 rounded-lg">
+                        <p class="text-xs text-gray-500 mb-1">Performance Score</p>
+                        <p class="performance-score score-excellent">92</p>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Spend:</span>
+                            <span class="font-mono font-semibold text-gray-900">₹38,500</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Leads:</span>
+                            <span class="font-mono font-semibold text-gray-900">26</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">CPL:</span>
+                            <span class="font-mono font-semibold text-green-600">₹1,481</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">ROI:</span>
+                            <span class="font-mono font-semibold text-green-600">420%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ad 3 -->
+                <div class="bg-white rounded-lg shadow-sm p-6 ad-card border-t-4 border-green-500">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-green-100 text-green-800 rounded-full font-bold text-sm mr-2">3</span>
+                                <h3 class="text-sm font-medium text-gray-500">Ad_CNC_Services_002</h3>
+                            </div>
+                            <p class="text-xs text-gray-400">Google Search • Campaign 1</p>
+                        </div>
+                    </div>
+                    <div class="text-center mb-4 py-4 bg-green-50 rounded-lg">
+                        <p class="text-xs text-gray-500 mb-1">Performance Score</p>
+                        <p class="performance-score score-excellent">88</p>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Spend:</span>
+                            <span class="font-mono font-semibold text-gray-900">₹35,000</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Leads:</span>
+                            <span class="font-mono font-semibold text-gray-900">24</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">CPL:</span>
+                            <span class="font-mono font-semibold text-green-600">₹1,458</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">ROI:</span>
+                            <span class="font-mono font-semibold text-green-600">385%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ad 4 -->
+                <div class="bg-white rounded-lg shadow-sm p-6 ad-card border-t-4 border-yellow-500">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-yellow-100 text-yellow-800 rounded-full font-bold text-sm mr-2">4</span>
+                                <h3 class="text-sm font-medium text-gray-500">static_Ad_Education_005</h3>
+                            </div>
+                            <p class="text-xs text-gray-400">Meta-Insta • Campaign 2</p>
+                        </div>
+                    </div>
+                    <div class="text-center mb-4 py-4 bg-yellow-50 rounded-lg">
+                        <p class="text-xs text-gray-500 mb-1">Performance Score</p>
+                        <p class="performance-score score-good">75</p>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Spend:</span>
+                            <span class="font-mono font-semibold text-gray-900">₹32,000</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Leads:</span>
+                            <span class="font-mono font-semibold text-gray-900">22</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">CPL:</span>
+                            <span class="font-mono font-semibold text-gray-900">₹1,455</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">ROI:</span>
+                            <span class="font-mono font-semibold text-green-600">298%</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ad 5 -->
+                <div class="bg-white rounded-lg shadow-sm p-6 ad-card border-t-4 border-yellow-500">
+                    <div class="flex items-start justify-between mb-4">
+                        <div class="flex-1">
+                            <div class="flex items-center mb-2">
+                                <span class="inline-flex items-center justify-center w-8 h-8 bg-yellow-100 text-yellow-800 rounded-full font-bold text-sm mr-2">5</span>
+                                <h3 class="text-sm font-medium text-gray-500">Ad_YouTube_MFG_003</h3>
+                            </div>
+                            <p class="text-xs text-gray-400">Google YouTube • Campaign 2</p>
+                        </div>
+                    </div>
+                    <div class="text-center mb-4 py-4 bg-yellow-50 rounded-lg">
+                        <p class="text-xs text-gray-500 mb-1">Performance Score</p>
+                        <p class="performance-score score-good">72</p>
+                    </div>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Spend:</span>
+                            <span class="font-mono font-semibold text-gray-900">₹28,500</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Leads:</span>
+                            <span class="font-mono font-semibold text-gray-900">18</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">CPL:</span>
+                            <span class="font-mono font-semibold text-gray-900">₹1,583</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">ROI:</span>
+                            <span class="font-mono font-semibold text-green-600">268%</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+
+            <!-- Performance Score Distribution -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Performance Score Distribution</h3>
+                <div class="chart-container">
+                    <canvas id="scoreDistributionChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Top 10 Ads by Leads -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Top 10 Ads by Leads Generated</h3>
+                <div class="chart-container">
+                    <canvas id="topAdsByLeadsChart"></canvas>
+                </div>
+            </div>
+
+            <!-- CPL Comparison -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Best CPL vs Worst CPL</h3>
+                <div class="chart-container">
+                    <canvas id="cplComparisonChart"></canvas>
+                </div>
+            </div>
+
+            <!-- ROI by Ad Type -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+                <h3 class="text-lg font-semibold text-gray-900 mb-4">Average ROI by Ad Type</h3>
+                <div class="chart-container">
+                    <canvas id="roiByTypeChart"></canvas>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Detailed Ad Table -->
+        <div class="bg-white rounded-lg shadow-sm overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+                <h3 class="text-lg font-semibold text-gray-900">All Ads Performance</h3>
+                <div class="flex items-center gap-3">
+                    <input type="text" placeholder="Search ads..." class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-purple-500 focus:border-transparent" />
+                    <button class="px-4 py-2 bg-purple-600 text-white rounded-lg text-sm hover:bg-purple-700 transition">
+                        <i class="fa-solid fa-filter mr-2"></i>Filters
+                    </button>
+                </div>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-50 border-b border-gray-200">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Rank</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Ad Name</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Campaign</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Platform</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Spend</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Clicks</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">CTR</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Leads</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">CPL</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">ROI</th>
+                            <th class="px-6 py-3 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">Score</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center justify-center w-6 h-6 bg-green-100 text-green-800 rounded-full font-bold text-xs">1</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Ad_Precision_001</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Campaign_1</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Google</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹40,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">800</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">5.20%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">28</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹1,429</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">445%</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">95</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center justify-center w-6 h-6 bg-green-100 text-green-800 rounded-full font-bold text-xs">2</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">video_Ad_Manufacturing_001</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Campaign_3</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800">Meta</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹38,500</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">950</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">4.15%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">26</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹1,481</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">420%</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">92</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center justify-center w-6 h-6 bg-green-100 text-green-800 rounded-full font-bold text-xs">3</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Ad_CNC_Services_002</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Campaign_1</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Google</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹35,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">720</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">4.95%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">24</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">₹1,458</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">385%</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">88</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center justify-center w-6 h-6 bg-yellow-100 text-yellow-800 rounded-full font-bold text-xs">4</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">static_Ad_Education_005</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Campaign_2</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-indigo-100 text-indigo-800">Meta</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹32,000</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">680</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">3.82%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">22</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,455</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">298%</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">75</span>
+                            </td>
+                        </tr>
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex items-center justify-center w-6 h-6 bg-yellow-100 text-yellow-800 rounded-full font-bold text-xs">5</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Ad_YouTube_MFG_003</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-600">Campaign_2</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-blue-100 text-blue-800">Google</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹28,500</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">590</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">3.65%</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">18</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-gray-900">₹1,583</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-mono text-green-600">268%</td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">72</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // Score Distribution Chart
+        const scoreDistCtx = document.getElementById('scoreDistributionChart').getContext('2d');
+        new Chart(scoreDistCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Excellent (80-100)', 'Good (60-79)', 'Poor (0-59)'],
+                datasets: [{
+                    data: [15, 28, 12],
+                    backgroundColor: ['#34A853', '#FBBC04', '#EA4335'],
+                    borderWidth: 2,
+                    borderColor: '#FFFFFF'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            font: { family: 'Roboto', size: 12 },
+                            padding: 16,
+                            usePointStyle: true
+                        }
+                    }
+                }
+            }
+        });
+
+        // Top Ads by Leads Chart
+        const topAdsCtx = document.getElementById('topAdsByLeadsChart').getContext('2d');
+        new Chart(topAdsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Ad_001', 'video_001', 'Ad_002', 'static_005', 'YT_003', 'Ad_004', 'FB_002', 'Ad_006', 'IG_001', 'Ad_008'],
+                datasets: [{
+                    label: 'Leads Generated',
+                    data: [28, 26, 24, 22, 18, 17, 16, 15, 14, 13],
+                    backgroundColor: '#667EEA',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: { beginAtZero: true }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // CPL Comparison Chart
+        const cplCompCtx = document.getElementById('cplComparisonChart').getContext('2d');
+        new Chart(cplCompCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Best 5 Ads', 'Worst 5 Ads'],
+                datasets: [{
+                    label: 'Average CPL (₹)',
+                    data: [1465, 2850],
+                    backgroundColor: ['#34A853', '#EA4335'],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return '₹' + value;
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+
+        // ROI by Type Chart
+        const roiTypeCtx = document.getElementById('roiByTypeChart').getContext('2d');
+        new Chart(roiTypeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Search Ads', 'Video Ads', 'Static Ads', 'YouTube Ads', 'Display Ads'],
+                datasets: [{
+                    label: 'Average ROI (%)',
+                    data: [415, 390, 310, 285, 245],
+                    backgroundColor: '#667EEA',
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
+
+    <!-- Dark Mode Script -->
+    <script src="js/dark-mode.js"></script>
+
+</body>
+</html>

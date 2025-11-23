@@ -1,0 +1,416 @@
+{
+  "summary": {
+    "totalSpend": 662500,
+    "totalImpressions": 1245680,
+    "totalClicks": 55420,
+    "ctr": 4.45,
+    "totalLeads": 465,
+    "qualifiedLeads": 342,
+    "qualificationRate": 73.5,
+    "cpl": 1425,
+    "cpql": 1937,
+    "revenue": 26500000,
+    "roi": 300
+  },
+  "campaigns": [
+    {
+      "id": "camp_001",
+      "name": "Google_Search_Manufacturing_Nov25",
+      "platform": "Google Ads",
+      "status": "Active",
+      "type": "Search",
+      "startDate": "2024-11-01",
+      "budget": 150000,
+      "spend": 145000,
+      "impressions": 558920,
+      "clicks": 28900,
+      "ctr": 5.17,
+      "leads": 95,
+      "qualified": 72,
+      "qualificationRate": 75.8,
+      "cpl": 1526,
+      "cpql": 2014,
+      "revenue": 6200000,
+      "roi": 328
+    },
+    {
+      "id": "camp_002",
+      "name": "Google_YouTube_TechManuf_Nov25",
+      "platform": "Google Ads",
+      "status": "Active",
+      "type": "Video",
+      "startDate": "2024-11-01",
+      "budget": 90000,
+      "spend": 85000,
+      "impressions": 345200,
+      "clicks": 14200,
+      "ctr": 4.11,
+      "leads": 70,
+      "qualified": 54,
+      "qualificationRate": 77.1,
+      "cpl": 1214,
+      "cpql": 1574,
+      "revenue": 4100000,
+      "roi": 382
+    },
+    {
+      "id": "camp_003",
+      "name": "Meta_FB_Manufacturing_Nov25",
+      "platform": "Meta Ads",
+      "status": "Active",
+      "type": "Lead Gen",
+      "startDate": "2024-11-01",
+      "budget": 100000,
+      "spend": 95000,
+      "impressions": 234560,
+      "clicks": 8110,
+      "ctr": 3.46,
+      "leads": 78,
+      "qualified": 60,
+      "qualificationRate": 76.9,
+      "cpl": 1218,
+      "cpql": 1583,
+      "revenue": 3500000,
+      "roi": 268
+    },
+    {
+      "id": "camp_004",
+      "name": "Meta_IG_Stories_TechManuf_Nov25",
+      "platform": "Meta Ads",
+      "status": "Active",
+      "type": "Stories",
+      "startDate": "2024-11-05",
+      "budget": 75000,
+      "spend": 72500,
+      "impressions": 107000,
+      "clicks": 4210,
+      "ctr": 3.93,
+      "leads": 52,
+      "qualified": 38,
+      "qualificationRate": 73.1,
+      "cpl": 1394,
+      "cpql": 1908,
+      "revenue": 2800000,
+      "roi": 286
+    },
+    {
+      "id": "camp_005",
+      "name": "Google_Display_EduTech_Nov25",
+      "platform": "Google Ads",
+      "status": "Active",
+      "type": "Display",
+      "startDate": "2024-11-01",
+      "budget": 120000,
+      "spend": 115000,
+      "impressions": 892000,
+      "clicks": 26780,
+      "ctr": 3.00,
+      "leads": 85,
+      "qualified": 62,
+      "qualificationRate": 72.9,
+      "cpl": 1353,
+      "cpql": 1855,
+      "revenue": 5800000,
+      "roi": 404
+    },
+    {
+      "id": "camp_006",
+      "name": "Meta_FB_EduTech_Nov25",
+      "platform": "Meta Ads",
+      "status": "Active",
+      "type": "Conversion",
+      "startDate": "2024-11-01",
+      "budget": 90000,
+      "spend": 85000,
+      "impressions": 178900,
+      "clicks": 7120,
+      "ctr": 3.98,
+      "leads": 85,
+      "qualified": 56,
+      "qualificationRate": 65.9,
+      "cpl": 1000,
+      "cpql": 1518,
+      "revenue": 4100000,
+      "roi": 382
+    }
+  ],
+  "clients": [
+    {
+      "id": "client_001",
+      "name": "Tech Manufacturing Ltd",
+      "industry": "Manufacturing",
+      "spend": 337500,
+      "leads": 243,
+      "qualified": 186,
+      "revenue": 14600000,
+      "campaigns": 3
+    },
+    {
+      "id": "client_002",
+      "name": "EduTech Solutions",
+      "industry": "Education",
+      "spend": 205000,
+      "leads": 170,
+      "qualified": 118,
+      "revenue": 9900000,
+      "campaigns": 2
+    },
+    {
+      "id": "client_003",
+      "name": "HealthWellness Clinic",
+      "industry": "Healthcare",
+      "spend": 120000,
+      "leads": 52,
+      "qualified": 38,
+      "revenue": 2000000,
+      "campaigns": 1
+    }
+  ],
+  "keywords": [
+    {
+      "keyword": "precision manufacturing services",
+      "matchType": "Exact",
+      "impressions": 125680,
+      "clicks": 4890,
+      "ctr": 3.89,
+      "spend": 215000,
+      "leads": 98,
+      "conversionRate": 2.00,
+      "cpc": 44.00,
+      "revenue": 4890000,
+      "qualityScore": 9
+    },
+    {
+      "keyword": "cnc machining company",
+      "matchType": "Phrase",
+      "impressions": 98240,
+      "clicks": 3420,
+      "ctr": 3.48,
+      "spend": 142500,
+      "leads": 72,
+      "conversionRate": 2.11,
+      "cpc": 41.67,
+      "revenue": 3200000,
+      "qualityScore": 8
+    },
+    {
+      "keyword": "online education platform",
+      "matchType": "Broad",
+      "impressions": 234890,
+      "clicks": 8960,
+      "ctr": 3.81,
+      "spend": 312000,
+      "leads": 142,
+      "conversionRate": 1.58,
+      "cpc": 34.82,
+      "revenue": 7800000,
+      "qualityScore": 7
+    },
+    {
+      "keyword": "digital learning solutions",
+      "matchType": "Exact",
+      "impressions": 156780,
+      "clicks": 6240,
+      "ctr": 3.98,
+      "spend": 267800,
+      "leads": 108,
+      "conversionRate": 1.73,
+      "cpc": 42.92,
+      "revenue": 5900000,
+      "qualityScore": 9
+    },
+    {
+      "keyword": "healthcare digital marketing",
+      "matchType": "Phrase",
+      "impressions": 87900,
+      "clicks": 2980,
+      "ctr": 3.39,
+      "spend": 125600,
+      "leads": 45,
+      "conversionRate": 1.51,
+      "cpc": 42.15,
+      "revenue": 2100000,
+      "qualityScore": 8
+    }
+  ],
+  "leadsBySource": [
+    {
+      "source": "Google Search",
+      "leads": 218,
+      "qualified": 167,
+      "qualificationRate": 76.5,
+      "spend": 337500,
+      "cpl": 1548,
+      "cpql": 2021
+    },
+    {
+      "source": "Google Display",
+      "leads": 112,
+      "qualified": 82,
+      "qualificationRate": 73.2,
+      "spend": 156000,
+      "cpl": 1393,
+      "cpql": 1902
+    },
+    {
+      "source": "Google Video",
+      "leads": 89,
+      "qualified": 68,
+      "qualificationRate": 76.4,
+      "spend": 125000,
+      "cpl": 1404,
+      "cpql": 1838
+    },
+    {
+      "source": "Meta Feed",
+      "leads": 142,
+      "qualified": 98,
+      "qualificationRate": 69.0,
+      "spend": 178000,
+      "cpl": 1254,
+      "cpql": 1816
+    },
+    {
+      "source": "Meta Stories",
+      "leads": 78,
+      "qualified": 56,
+      "qualificationRate": 71.8,
+      "spend": 98500,
+      "cpl": 1263,
+      "cpql": 1759
+    },
+    {
+      "source": "Direct/Organic",
+      "leads": 82,
+      "qualified": 71,
+      "qualificationRate": 86.6,
+      "spend": 0,
+      "cpl": 0,
+      "cpql": 0
+    }
+  ],
+  "dailyMetrics": [
+    {
+      "date": "2024-11-01",
+      "spend": 22500,
+      "impressions": 42300,
+      "clicks": 1890,
+      "leads": 16,
+      "qualified": 12
+    },
+    {
+      "date": "2024-11-02",
+      "spend": 23800,
+      "impressions": 44200,
+      "clicks": 1950,
+      "leads": 17,
+      "qualified": 13
+    },
+    {
+      "date": "2024-11-03",
+      "spend": 24100,
+      "impressions": 45600,
+      "clicks": 2020,
+      "leads": 18,
+      "qualified": 14
+    },
+    {
+      "date": "2024-11-04",
+      "spend": 22900,
+      "impressions": 43100,
+      "clicks": 1920,
+      "leads": 16,
+      "qualified": 11
+    },
+    {
+      "date": "2024-11-05",
+      "spend": 25600,
+      "impressions": 47800,
+      "clicks": 2110,
+      "leads": 19,
+      "qualified": 15
+    },
+    {
+      "date": "2024-11-06",
+      "spend": 24800,
+      "impressions": 46200,
+      "clicks": 2050,
+      "leads": 18,
+      "qualified": 13
+    },
+    {
+      "date": "2024-11-07",
+      "spend": 23500,
+      "impressions": 44500,
+      "clicks": 1980,
+      "leads": 17,
+      "qualified": 12
+    },
+    {
+      "date": "2024-11-08",
+      "spend": 26200,
+      "impressions": 48900,
+      "clicks": 2180,
+      "leads": 20,
+      "qualified": 16
+    },
+    {
+      "date": "2024-11-09",
+      "spend": 25100,
+      "impressions": 47100,
+      "clicks": 2090,
+      "leads": 19,
+      "qualified": 14
+    },
+    {
+      "date": "2024-11-10",
+      "spend": 24700,
+      "impressions": 46800,
+      "clicks": 2070,
+      "leads": 18,
+      "qualified": 13
+    },
+    {
+      "date": "2024-11-11",
+      "spend": 25800,
+      "impressions": 48200,
+      "clicks": 2140,
+      "leads": 19,
+      "qualified": 15
+    }
+  ],
+  "services": [
+    {
+      "name": "Digital Marketing",
+      "leads": 156,
+      "qualified": 118,
+      "conversionRate": 2.8,
+      "revenue": 8900000,
+      "avgDealSize": 75424
+    },
+    {
+      "name": "SEO Services",
+      "leads": 98,
+      "qualified": 72,
+      "conversionRate": 2.4,
+      "revenue": 5200000,
+      "avgDealSize": 72222
+    },
+    {
+      "name": "Web Development",
+      "leads": 87,
+      "qualified": 64,
+      "conversionRate": 2.1,
+      "revenue": 6800000,
+      "avgDealSize": 106250
+    },
+    {
+      "name": "Social Media Management",
+      "leads": 124,
+      "qualified": 88,
+      "conversionRate": 3.1,
+      "revenue": 5600000,
+      "avgDealSize": 63636
+    }
+  ]
+}

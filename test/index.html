@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lead Analytics Dashboard - Olio Global AdTech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="enhanced-theme.css">
+    <style>
+        .sidebar {
+            width: 260px;
+            transition: all 0.3s;
+        }
+
+        .sidebar-collapsed {
+            width: 70px;
+        }
+
+        .table-hover tbody tr:hover {
+            background-color: #F9FAFB;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+    <!-- Header -->
+    <header class="bg-white shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div class="flex items-center justify-between px-6 py-3">
+            <div class="flex items-center space-x-4">
+                <button id="sidebarToggle" class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-bars text-xl"></i>
+                </button>
+                <h1 class="text-2xl font-bold text-purple-600">Olio Global AdTech</h1>
+            </div>
+
+            <div class="flex items-center space-x-4">
+                <button id="darkModeToggle" class="text-gray-600 hover:text-gray-900" aria-label="Toggle dark mode">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="text-gray-600 hover:text-gray-900">
+                    <i class="fas fa-bell text-xl"></i>
+                </button>
+                <div class="flex items-center space-x-2">
+                    <div class="w-10 h-10 bg-purple-600 rounded-full flex items-center justify-center text-white font-semibold">
+                        AM
+                    </div>
+                    <span class="text-sm font-medium">Agency Manager</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="flex pt-18">
+
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar bg-white shadow-lg fixed left-0 top-18 bottom-0 overflow-y-auto">
+            <nav class="py-4">
+                <!-- Dashboard -->
+                <div class="px-4 mb-2">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Dashboard</h3>
+                </div>
+                <a href="index.html" class="nav-item active flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-chart-line w-6"></i>
+                    <span class="ml-3 sidebar-text">Master Summary</span>
+                </a>
+
+                <!-- Client Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Client Reports</h3>
+                </div>
+                <a href="client-deepdive.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-building w-6"></i>
+                    <span class="ml-3 sidebar-text">Client Deep-Dive</span>
+                </a>
+                <a href="client-comparison.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-balance-scale w-6"></i>
+                    <span class="ml-3 sidebar-text">Client Comparison</span>
+                </a>
+
+                <!-- Campaign & Ad Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Campaign & Ads</h3>
+                </div>
+                <a href="campaign-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-megaphone w-6"></i>
+                    <span class="ml-3 sidebar-text">Campaign Performance</span>
+                </a>
+                <a href="ad-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-ad w-6"></i>
+                    <span class="ml-3 sidebar-text">Ad Performance</span>
+                </a>
+                <a href="creative-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-palette w-6"></i>
+                    <span class="ml-3 sidebar-text">Creative Performance</span>
+                </a>
+                <a href="platform-comparison.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-chart-bar w-6"></i>
+                    <span class="ml-3 sidebar-text">Platform Comparison</span>
+                </a>
+
+                <!-- Lead Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Lead Analytics</h3>
+                </div>
+                <a href="lead-stage-funnel.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-filter w-6"></i>
+                    <span class="ml-3 sidebar-text">Lead Stage Funnel</span>
+                </a>
+                <a href="lead-source-analysis.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-bullseye w-6"></i>
+                    <span class="ml-3 sidebar-text">Lead Source Analysis</span>
+                </a>
+                <a href="geographic-performance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-map-marker-alt w-6"></i>
+                    <span class="ml-3 sidebar-text">Geographic Performance</span>
+                </a>
+                <a href="service-wise-analysis.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-briefcase w-6"></i>
+                    <span class="ml-3 sidebar-text">Service/Product Analysis</span>
+                </a>
+                <a href="keyword-analysis.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-key w-6"></i>
+                    <span class="ml-3 sidebar-text">Keyword Analysis</span>
+                </a>
+
+                <!-- Financial Reports -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Financial</h3>
+                </div>
+                <a href="budget-vs-actual.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-wallet w-6"></i>
+                    <span class="ml-3 sidebar-text">Budget vs Actual</span>
+                </a>
+                <a href="cost-variance.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-chart-area w-6"></i>
+                    <span class="ml-3 sidebar-text">Cost Variance</span>
+                </a>
+                <a href="revenue-attribution.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-rupee-sign w-6"></i>
+                    <span class="ml-3 sidebar-text">Revenue Attribution</span>
+                </a>
+
+                <!-- Trend Analysis -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Trends</h3>
+                </div>
+                <a href="time-trends.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-clock w-6"></i>
+                    <span class="ml-3 sidebar-text">Time-based Trends</span>
+                </a>
+
+                <!-- Data Upload -->
+                <div class="px-4 mb-2 mt-6">
+                    <h3 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">Data Management</h3>
+                </div>
+                <a href="upload.html" class="nav-item flex items-center px-4 py-3 text-gray-700">
+                    <i class="fas fa-upload w-6"></i>
+                    <span class="ml-3 sidebar-text">Upload Data</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main id="mainContent" class="flex-1 p-6 ml-64 transition-all">
+
+            <!-- Page Header -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-3xl font-bold text-gray-800">Master Summary Dashboard</h2>
+                        <p class="text-gray-600 mt-1">Executive overview across all clients (Oct 12, 2025 - Nov 11, 2025)</p>
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                            <i class="fas fa-file-excel text-green-600 mr-2"></i>Export Excel
+                        </button>
+                        <button class="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                            <i class="fas fa-file-pdf text-red-600 mr-2"></i>Export PDF
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KPI Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                <!-- Total Ad Spend -->
+                <div class="kpi-card bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-600">Total Ad Spend</h3>
+                        <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-rupee-sign text-blue-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">₹12,45,000</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="text-green-600 font-medium">↑ 12.5%</span>
+                        <span class="text-gray-500 ml-2">vs last period</span>
+                    </div>
+                </div>
+
+                <!-- Total Leads Generated -->
+                <div class="kpi-card bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-600">Total Leads</h3>
+                        <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-users text-purple-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">847</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="text-green-600 font-medium">↑ 8.3%</span>
+                        <span class="text-gray-500 ml-2">vs last period</span>
+                    </div>
+                </div>
+
+                <!-- Qualified Leads -->
+                <div class="kpi-card bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-600">Qualified Leads</h3>
+                        <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-check-circle text-green-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">612</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="text-green-600 font-medium">72.3%</span>
+                        <span class="text-gray-500 ml-2">qualification rate</span>
+                    </div>
+                </div>
+
+                <!-- Total Revenue -->
+                <div class="kpi-card bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-600">Total Revenue</h3>
+                        <div class="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-trophy text-yellow-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">₹45,67,500</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="text-green-600 font-medium">267% ROI</span>
+                        <span class="text-gray-500 ml-2">return on ad spend</span>
+                    </div>
+                </div>
+
+                <!-- Average CPL -->
+                <div class="kpi-card bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-600">Average CPL</h3>
+                        <div class="w-10 h-10 bg-indigo-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-calculator text-indigo-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">₹1,470</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="text-red-600 font-medium">↑ 3.2%</span>
+                        <span class="text-gray-500 ml-2">vs last period</span>
+                    </div>
+                </div>
+
+                <!-- Average CPQL -->
+                <div class="kpi-card bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-600">Average CPQL</h3>
+                        <div class="w-10 h-10 bg-teal-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-star text-teal-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">₹2,034</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="text-green-600 font-medium">↓ 1.8%</span>
+                        <span class="text-gray-500 ml-2">vs last period</span>
+                    </div>
+                </div>
+
+                <!-- Qualification Rate -->
+                <div class="kpi-card bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-600">Qualification Rate</h3>
+                        <div class="w-10 h-10 bg-pink-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-percent text-pink-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">72.3%</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="text-green-600 font-medium">↑ 2.1%</span>
+                        <span class="text-gray-500 ml-2">vs last period</span>
+                    </div>
+                </div>
+
+                <!-- Overall ROI -->
+                <div class="kpi-card bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-2">
+                        <h3 class="text-sm font-medium text-gray-600">Overall ROI</h3>
+                        <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                            <i class="fas fa-chart-line text-orange-600"></i>
+                        </div>
+                    </div>
+                    <p class="text-3xl font-bold text-gray-900 font-mono">267%</p>
+                    <div class="mt-2 flex items-center text-sm">
+                        <span class="text-green-600 font-medium">↑ 15.3%</span>
+                        <span class="text-gray-500 ml-2">vs last period</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 1 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+                <!-- Lead Quality by Platform -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Lead Quality by Platform</h3>
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="leadQualityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Cost Efficiency Comparison -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Cost Efficiency: CPL vs CPQL</h3>
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="costEfficiencyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Row 2 -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+                <!-- Lead Volume by Client -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Lead Volume by Client</h3>
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="leadVolumeChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Revenue Attribution by Platform -->
+                <div class="bg-white rounded-xl shadow-md p-6">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">Revenue Attribution by Platform</h3>
+                        <button class="text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="revenueAttributionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qualification Rate Trend -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Qualification Rate Trend</h3>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50">Weekly</button>
+                        <button class="px-3 py-1 text-sm bg-purple-600 text-white rounded">Daily</button>
+                    </div>
+                </div>
+                <div style="height: 250px;">
+                    <canvas id="qualificationTrendChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Client Performance Table -->
+            <div class="bg-white rounded-xl shadow-md p-6 mb-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-gray-800">Client-wise Performance Summary</h3>
+                    <div class="flex items-center space-x-2">
+                        <input type="text" placeholder="Search clients..." class="px-3 py-2 border rounded-lg text-sm">
+                        <button class="px-3 py-2 bg-gray-100 rounded-lg hover:bg-gray-200">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full table-hover">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Client Name</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Total Spend</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Total Leads</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Qualified</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Junk</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Qual. Rate</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">CPL</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">CPQL</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Revenue</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">ROI</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Best Platform</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200">
+                            <tr class="cursor-pointer" onclick="window.location='client-deepdive.html?client=techmanufacturing'">
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-semibold text-sm mr-3">TM</div>
+                                        <span class="font-medium text-gray-900">Tech Manufacturing Ltd</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹3,85,000</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">285</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">218</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">67</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">76.5%</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,351</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,766</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm text-green-600 font-semibold">₹15,40,000</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">300%</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google Ads</span>
+                                </td>
+                            </tr>
+                            <tr class="cursor-pointer" onclick="window.location='client-deepdive.html?client=edutech'">
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-purple-100 rounded-full flex items-center justify-center text-purple-600 font-semibold text-sm mr-3">ET</div>
+                                        <span class="font-medium text-gray-900">EduTech Solutions</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹2,45,000</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">178</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">125</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">53</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">70.2%</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,376</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,960</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm text-green-600 font-semibold">₹8,75,000</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">257%</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Meta Ads</span>
+                                </td>
+                            </tr>
+                            <tr class="cursor-pointer" onclick="window.location='client-deepdive.html?client=healthwellness'">
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center text-green-600 font-semibold text-sm mr-3">HW</div>
+                                        <span class="font-medium text-gray-900">HealthWellness Clinic</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,95,000</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">142</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">102</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">40</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">71.8%</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,373</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,912</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm text-green-600 font-semibold">₹6,25,000</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">221%</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google Ads</span>
+                                </td>
+                            </tr>
+                            <tr class="cursor-pointer" onclick="window.location='client-deepdive.html?client=realestate'">
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-semibold text-sm mr-3">RE</div>
+                                        <span class="font-medium text-gray-900">RealEstate Pro</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹2,85,000</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">156</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">107</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">49</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">68.6%</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,827</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹2,664</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm text-green-600 font-semibold">₹9,80,000</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">244%</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Meta Ads</span>
+                                </td>
+                            </tr>
+                            <tr class="cursor-pointer" onclick="window.location='client-deepdive.html?client=financeadvisors'">
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <div class="w-8 h-8 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-600 font-semibold text-sm mr-3">FA</div>
+                                        <span class="font-medium text-gray-900">Finance Advisors Inc</span>
+                                    </div>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,35,000</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">86</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">60</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">26</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">69.8%</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹1,570</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm">₹2,250</td>
+                                <td class="px-4 py-4 whitespace-nowrap font-mono text-sm text-green-600 font-semibold">₹5,47,500</td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">305%</span>
+                                </td>
+                                <td class="px-4 py-4 whitespace-nowrap">
+                                    <span class="px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs">Google Ads</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="mt-4 flex items-center justify-between">
+                    <p class="text-sm text-gray-600">Showing 5 of 5 clients</p>
+                    <div class="flex space-x-2">
+                        <button class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50" disabled>Previous</button>
+                        <button class="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50" disabled>Next</button>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        // Sidebar Toggle
+        document.getElementById('sidebarToggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+            sidebar.classList.toggle('sidebar-collapsed');
+            if (sidebar.classList.contains('sidebar-collapsed')) {
+                mainContent.style.marginLeft = '70px';
+            } else {
+                mainContent.style.marginLeft = '260px';
+            }
+        });
+
+        // Lead Quality by Platform Chart
+        const leadQualityCtx = document.getElementById('leadQualityChart').getContext('2d');
+        new Chart(leadQualityCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Google Ads', 'Meta Ads'],
+                datasets: [{
+                    label: 'Qualified',
+                    data: [342, 270],
+                    backgroundColor: '#34A853',
+                }, {
+                    label: 'Junk',
+                    data: [123, 112],
+                    backgroundColor: '#EA4335',
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    title: {
+                        display: false
+                    }
+                },
+                scales: {
+                    x: {
+                        stacked: true,
+                    },
+                    y: {
+                        stacked: true,
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Cost Efficiency Chart
+        const costEfficiencyCtx = document.getElementById('costEfficiencyChart').getContext('2d');
+        new Chart(costEfficiencyCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Google Ads', 'Meta Ads'],
+                datasets: [{
+                    label: 'CPL (₹)',
+                    data: [1425, 1520],
+                    backgroundColor: '#4285F4',
+                }, {
+                    label: 'CPQL (₹)',
+                    data: [1890, 2185],
+                    backgroundColor: '#FBBC04',
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Lead Volume by Client Chart
+        const leadVolumeCtx = document.getElementById('leadVolumeChart').getContext('2d');
+        new Chart(leadVolumeCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Tech Manufacturing', 'EduTech', 'HealthWellness', 'RealEstate', 'Finance Advisors'],
+                datasets: [{
+                    label: 'Google Ads',
+                    data: [165, 75, 85, 68, 50],
+                    backgroundColor: '#4285F4',
+                }, {
+                    label: 'Meta Ads',
+                    data: [120, 103, 57, 88, 36],
+                    backgroundColor: '#1877F2',
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Revenue Attribution Chart
+        const revenueCtx = document.getElementById('revenueAttributionChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Google Ads', 'Meta Ads'],
+                datasets: [{
+                    data: [26.5, 19.2],
+                    backgroundColor: ['#4285F4', '#1877F2'],
+                    borderWidth: 2,
+                    borderColor: '#fff'
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.label + ': ₹' + context.parsed + 'L';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Qualification Rate Trend Chart
+        const qualTrendCtx = document.getElementById('qualificationTrendChart').getContext('2d');
+        new Chart(qualTrendCtx, {
+            type: 'line',
+            data: {
+                labels: ['Oct 12', 'Oct 15', 'Oct 18', 'Oct 21', 'Oct 24', 'Oct 27', 'Oct 30', 'Nov 2', 'Nov 5', 'Nov 8', 'Nov 11'],
+                datasets: [{
+                    label: 'Qualification Rate (%)',
+                    data: [68, 70, 71, 69, 72, 73, 71, 74, 72, 73, 72.3],
+                    borderColor: '#667EEA',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        min: 60,
+                        max: 80,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Sidebar Overlay for Mobile -->
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <!-- Mobile Sidebar Toggle Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sidebar = document.getElementById('sidebar');
+            const sidebarToggle = document.getElementById('sidebarToggle');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            if (sidebarToggle && sidebar) {
+                sidebarToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                    sidebarOverlay.classList.toggle('active');
+                });
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', function() {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                });
+            }
+
+            // Close sidebar when clicking nav links on mobile
+            const navLinks = sidebar.querySelectorAll('.nav-item');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 640) {
+                        sidebar.classList.remove('active');
+                        sidebarOverlay.classList.remove('active');
+                    }
+                });
+            });
+
+            // Handle window resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth >= 640) {
+                    sidebar.classList.remove('active');
+                    sidebarOverlay.classList.remove('active');
+                }
+            });
+        });
+    </script>
+
+    <!-- Data Loading & Filtering Scripts -->
+    <script src="js/data-loader.js"></script>
+    <script src="js/filters.js"></script>
+    <script src="js/table-utils.js"></script>
+
+    <!-- Dark Mode Script -->
+    <script src="js/dark-mode.js"></script>
+
+    <!-- Initialize Dashboard -->
+    <script>
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', async function() {
+            console.log('Initializing dashboard...');
+
+            // Load data
+            await dataLoader.loadData();
+
+            // Update dashboard with data
+            updateDashboard();
+
+            // Listen for filter changes
+            filterManager.onChange((filters) => {
+                console.log('Filters changed:', filters);
+                dataLoader.applyFilters(filters);
+                updateDashboard();
+            });
+        });
+
+        function updateDashboard() {
+            const summary = dataLoader.getSummary();
+
+            if (!summary) {
+                console.warn('No summary data available');
+                return;
+            }
+
+            console.log('Updating dashboard with:', summary);
+
+            // Update summary cards (you can expand this)
+            // Example: Update total spend, leads, revenue cards
+        }
+    </script>
+
+</body>
+</html>
