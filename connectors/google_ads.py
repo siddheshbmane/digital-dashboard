@@ -62,7 +62,9 @@ class GoogleAdsConnector:
             # NOTE: This is a simplified setup. Real Google Ads auth is complex.
             # We will assume the user provides a dict compatible with load_from_dict
             
-            client = GoogleAdsClient.load_from_dict(self.credentials)
+            # Initialize client
+            config = {**self.credentials, "use_proto_plus": True}
+            client = GoogleAdsClient.load_from_dict(config)
             
             # Set login_customer_id if provided (required for Manager Accounts accessing Client Accounts)
             login_customer_id = self.credentials.get("login_customer_id")
@@ -141,7 +143,8 @@ class GoogleAdsConnector:
 
         try:
             from google.ads.googleads.client import GoogleAdsClient
-            client = GoogleAdsClient.load_from_dict(self.credentials)
+            config = {**self.credentials, "use_proto_plus": True}
+            client = GoogleAdsClient.load_from_dict(config)
             if self.credentials.get("login_customer_id"):
                 client.login_customer_id = self.credentials.get("login_customer_id")
             
@@ -205,7 +208,8 @@ class GoogleAdsConnector:
 
         try:
             from google.ads.googleads.client import GoogleAdsClient
-            client = GoogleAdsClient.load_from_dict(self.credentials)
+            config = {**self.credentials, "use_proto_plus": True}
+            client = GoogleAdsClient.load_from_dict(config)
             if self.credentials.get("login_customer_id"):
                 client.login_customer_id = self.credentials.get("login_customer_id")
             
@@ -265,7 +269,8 @@ class GoogleAdsConnector:
             
         try:
             from google.ads.googleads.client import GoogleAdsClient
-            client = GoogleAdsClient.load_from_dict(self.credentials)
+            config = {**self.credentials, "use_proto_plus": True}
+            client = GoogleAdsClient.load_from_dict(config)
             if self.credentials.get("login_customer_id"):
                 client.login_customer_id = self.credentials.get("login_customer_id")
             
@@ -339,7 +344,8 @@ class GoogleAdsConnector:
             
         try:
             from google.ads.googleads.client import GoogleAdsClient
-            client = GoogleAdsClient.load_from_dict(self.credentials)
+            config = {**self.credentials, "use_proto_plus": True}
+            client = GoogleAdsClient.load_from_dict(config)
             if self.credentials.get("login_customer_id"):
                 client.login_customer_id = self.credentials.get("login_customer_id")
             
@@ -409,7 +415,8 @@ class GoogleAdsConnector:
             from google.ads.googleads.client import GoogleAdsClient
             from google.ads.googleads.errors import GoogleAdsException
 
-            client = GoogleAdsClient.load_from_dict(self.credentials)
+            config = {**self.credentials, "use_proto_plus": True}
+            client = GoogleAdsClient.load_from_dict(config)
             
             # Set login_customer_id if provided
             login_customer_id = self.credentials.get("login_customer_id")
