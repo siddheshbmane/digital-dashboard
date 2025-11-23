@@ -116,7 +116,8 @@ top_ads = ad_data.sort_values('Score', ascending=False).head(5)
 cols = st.columns(len(top_ads)) if len(top_ads) > 0 else []
 for i, (index, row) in enumerate(top_ads.iterrows()):
     with cols[i]:
-        st.markdown(f"### #{i+1} {row.name if row.name else 'Ad'}") # row.name is the index (Ad Name)
+        ad_name = row['Ad Name'] if 'Ad Name' in row else (row.name if row.name else 'Ad')
+        st.markdown(f"### #{i+1} {ad_name}")
         st.metric("Score", f"{row['Score']}/100")
         st.caption(f"Leads: {int(row['Conversions'])}")
         st.caption(f"CPL: {format_currency(row['CPL'])}")
@@ -127,12 +128,14 @@ c1, c2 = st.columns(2)
 
 with c1:
     st.subheader("Top Ads by Leads")
-    fig_leads = px.bar(top_ads, x='Conversions', y=top_ads.index, orientation='h', title="Leads Generated")
+    y_col = 'Ad Name' if 'Ad Name' in top_ads.columns else top_ads.index
+    fig_leads = px.bar(top_ads, x='Conversions', y=y_col, orientation='h', title="Leads Generated")
     st.plotly_chart(fig_leads, use_container_width=True)
 
 with c2:
     st.subheader("ROI vs CPL")
-    fig_scatter = px.scatter(ad_data, x='CPL', y='ROI', size='Conversions', hover_name=ad_data.index,
+    hover_name = 'Ad Name' if 'Ad Name' in ad_data.columns else ad_data.index
+    fig_scatter = px.scatter(ad_data, x='CPL', y='ROI', size='Conversions', hover_name=hover_name,
                              title="ROI vs CPL (Size = Leads)")
     st.plotly_chart(fig_scatter, use_container_width=True)
 
