@@ -432,22 +432,37 @@ def get_source_stage_data(lead_df):
     stage_data = lead_df.groupby(['Lead Stage', 'Source']).size().reset_index(name='Count')
     return stage_data
 
-def get_campaign_service_map(lead_df):
+def get_campaign_service_map(lead_df, service_col=None):
     """
     Creates a mapping from Campaign ID to Service/Product based on lead data.
+    service_col: Optional column name to use for Service/Product.
     """
-    if lead_df.empty or 'Service' not in lead_df.columns:
+    if lead_df.empty:
+        return {}
+        
+    # Determine which column to use
+    target_col = 'Service'
+    if service_col and service_col in lead_df.columns:
+        target_col = service_col
+    elif 'Service' in lead_df.columns:
+        target_col = 'Service'
+    elif 'Product' in lead_df.columns:
+        target_col = 'Product'
+    else:
         return {}
         
     campaign_service_map = {}
     # Group by Campaign ID and find mode of Service
     if 'Campaign ID' in lead_df.columns:
         for cid, group in lead_df.groupby('Campaign ID'):
-            if not group['Service'].empty:
+            if not group[target_col].empty:
                 # Use mode (most frequent) service for this campaign
                 try:
-                    top_service = group['Service'].mode()[0]
-                    campaign_service_map[int(cid)] = top_service
+                    # Drop NA values before finding mode
+                    valid_values = group[target_col].dropna()
+                    if not valid_values.empty:
+                        top_service = valid_values.mode()[0]
+                        campaign_service_map[int(cid)] = top_service
                 except (IndexError, ValueError):
                     continue
                     

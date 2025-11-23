@@ -73,35 +73,78 @@ if combined_df.empty:
     st.warning("No data available for the selected period.")
     st.stop()
 
+# --- Configuration ---
+from utils.client_manager import get_active_clients, update_client_config
+
+# Get current client config
+active_clients = get_active_clients()
+current_client = next((c for c in active_clients if c['id'] == client_id), None)
+current_service_col = current_client.get('service_column') if current_client else None
+
+with st.expander("Configuration", expanded=False):
+    st.write("Configure which column in your uploaded leads represents the Service or Product.")
+    
+    if not leads_df.empty:
+        # Filter out likely non-service columns (dates, IDs) to make list cleaner
+        potential_cols = [c for c in leads_df.columns if 'ID' not in c and 'Date' not in c and 'Time' not in c]
+        # Ensure current selection is in list
+        if current_service_col and current_service_col not in potential_cols:
+            potential_cols.append(current_service_col)
+            
+        selected_col = st.selectbox(
+            "Select Service/Product Column", 
+            options=[""] + sorted(potential_cols),
+            index=potential_cols.index(current_service_col) + 1 if current_service_col in potential_cols else 0,
+            help="Select the column that identifies the service or product sold."
+        )
+        
+        if st.button("Save Configuration"):
+            if selected_col:
+                update_client_config(client_id, {'service_column': selected_col})
+                st.success(f"Saved '{selected_col}' as the Service column for this client.")
+                st.cache_data.clear()
+                st.rerun()
+            else:
+                # If cleared
+                update_client_config(client_id, {'service_column': None})
+                st.success("Cleared Service column configuration.")
+                st.cache_data.clear()
+                st.rerun()
+    else:
+        st.info("Upload lead data to configure columns.")
+
 # --- Processing ---
 
 # 1. Get Service Map from Leads
-service_map = get_campaign_service_map(leads_df)
+# Use the configured column if available
+service_map = get_campaign_service_map(leads_df, service_col=current_service_col)
 
 if not service_map:
-    st.info("No Service/Product mapping found in lead data. Showing data by Campaign Name instead.")
-    # Fallback: Use Campaign Name as 'Service'
-    combined_df['Service'] = combined_df['Campaign']
-    service_stats = get_service_performance_data(combined_df, {}) # Pass empty map, it will use 'Service' col if exists?
-    # Actually get_service_performance_data expects map. Let's adjust logic.
-    # If map is empty, we should manually set 'Service' column before calling aggregation or handle it.
-    # The function `get_service_performance_data` overwrites 'Service' column based on map.
-    # Let's just manually aggregate if no map.
-    
-    service_stats = combined_df.groupby('Campaign').agg({
-        'Spend': 'sum',
-        'Conversions': 'sum',
-        'Qualified Leads': 'sum',
-        'ConversionValue': 'sum',
-        'Clicks': 'sum',
-        'Impressions': 'sum'
-    }).reset_index().rename(columns={'Campaign': 'Service'})
-    
-    # Calc metrics manually for fallback
-    service_stats['CPA'] = (service_stats['Spend'] / service_stats['Conversions']).replace([float('inf')], 0).fillna(0)
-    service_stats['Conv Rate'] = (service_stats['Conversions'] / service_stats['Clicks'] * 100).fillna(0)
-    service_stats['Pipeline Value'] = service_stats['ConversionValue']
-    
+    if current_service_col:
+        st.warning(f"Configuration set to '{current_service_col}', but no valid mapping found. Checking default columns...")
+        # Try default fallback
+        service_map = get_campaign_service_map(leads_df)
+        
+    if not service_map:
+        st.info("No Service/Product mapping found in lead data. Showing data by Campaign Name instead.")
+        # Fallback: Use Campaign Name as 'Service'
+        combined_df['Service'] = combined_df['Campaign']
+        
+        service_stats = combined_df.groupby('Campaign').agg({
+            'Spend': 'sum',
+            'Conversions': 'sum',
+            'Qualified Leads': 'sum',
+            'ConversionValue': 'sum',
+            'Clicks': 'sum',
+            'Impressions': 'sum'
+        }).reset_index().rename(columns={'Campaign': 'Service'})
+        
+        # Calc metrics manually for fallback
+        service_stats['CPA'] = (service_stats['Spend'] / service_stats['Conversions']).replace([float('inf')], 0).fillna(0)
+        service_stats['Conv Rate'] = (service_stats['Conversions'] / service_stats['Clicks'] * 100).fillna(0)
+        service_stats['Pipeline Value'] = service_stats['ConversionValue']
+    else:
+         service_stats = get_service_performance_data(combined_df, service_map)
 else:
     service_stats = get_service_performance_data(combined_df, service_map)
 
