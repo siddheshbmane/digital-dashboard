@@ -39,7 +39,13 @@ class AuthManager:
             
             return credentials.refresh_token
         except Exception as e:
-            st.error(f"Google OAuth failed: {e}")
+            error_msg = str(e)
+            if "could not locate runnable browser" in error_msg.lower():
+                st.error("Google OAuth failed: Cannot launch a browser on the server.")
+                st.info("On Streamlit Cloud, please configure your credentials in the 'Secrets' settings instead of signing in here.")
+                st.markdown("[Read the Deployment Guide](file:///Users/siddhesh/.gemini/antigravity/brain/220905ac-f45f-4019-b673-0b65dca0d0c1/deployment_guide.md) for details.")
+            else:
+                st.error(f"Google OAuth failed: {e}")
             return None
 
     def get_google_accounts(self, credentials):

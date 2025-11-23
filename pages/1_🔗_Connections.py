@@ -23,28 +23,46 @@ with st.container(border=True):
         client_secret = st.text_input("Client Secret", value=g_saved.get("client_secret", ""), type="password", key="g_client_secret")
         developer_token = st.text_input("Developer Token", value=g_saved.get("developer_token", ""), type="password", key="g_dev_token")
         
+        # Optional: Manual Refresh Token Entry (for Cloud users who can't use the button)
+        st.markdown("**OR**")
+        manual_refresh = st.text_input("Refresh Token (Manual Entry)", value=g_saved.get("refresh_token", ""), type="password", help="Paste your Refresh Token here if you are on Cloud.", key="g_manual_refresh")
+        
         if st.button("Sign in with Google"):
             if not client_id or not client_secret or not developer_token:
                 st.error("Please enter Client ID, Client Secret, and Developer Token.")
             else:
-                with st.spinner("Opening browser for authentication..."):
-                    config = {"client_id": client_id, "client_secret": client_secret}
-                    refresh_token = auth_manager.google_oauth_flow(config)
-                    
-                    if refresh_token:
-                        st.success("Authentication successful!")
-                        # Save preliminary creds to session state or file to use for fetching accounts
-                        temp_creds = {
-                            "developer_token": developer_token,
-                            "client_id": client_id,
-                            "client_secret": client_secret,
-                            "refresh_token": refresh_token
-                        }
-                        # Update saved creds structure
-                        if "google" not in saved_creds: saved_creds["google"] = {}
-                        saved_creds["google"].update(temp_creds)
-                        save_credentials(saved_creds)
-                        st.rerun()
+                # Check for manual refresh token first
+                if manual_refresh:
+                    st.success("Using manually entered Refresh Token.")
+                    temp_creds = {
+                        "developer_token": developer_token,
+                        "client_id": client_id,
+                        "client_secret": client_secret,
+                        "refresh_token": manual_refresh
+                    }
+                    if "google" not in saved_creds: saved_creds["google"] = {}
+                    saved_creds["google"].update(temp_creds)
+                    save_credentials(saved_creds)
+                    st.rerun()
+                else:
+                    with st.spinner("Opening browser for authentication..."):
+                        config = {"client_id": client_id, "client_secret": client_secret}
+                        refresh_token = auth_manager.google_oauth_flow(config)
+                        
+                        if refresh_token:
+                            st.success("Authentication successful!")
+                            # Save preliminary creds to session state or file to use for fetching accounts
+                            temp_creds = {
+                                "developer_token": developer_token,
+                                "client_id": client_id,
+                                "client_secret": client_secret,
+                                "refresh_token": refresh_token
+                            }
+                            # Update saved creds structure
+                            if "google" not in saved_creds: saved_creds["google"] = {}
+                            saved_creds["google"].update(temp_creds)
+                            save_credentials(saved_creds)
+                            st.rerun()
 
     with col2:
         st.subheader("Account Selection")
