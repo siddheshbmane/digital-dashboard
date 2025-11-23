@@ -221,7 +221,9 @@ class GoogleAdsConnector:
                     ad_group_criterion.keyword.text,
                     metrics.impressions,
                     metrics.clicks,
-                    metrics.cost_micros
+                    metrics.cost_micros,
+                    metrics.conversions,
+                    metrics.conversions_value
                 FROM keyword_view
                 WHERE segments.date BETWEEN '{start_date.strftime('%Y-%m-%d')}' AND '{end_date.strftime('%Y-%m-%d')}'
             """
@@ -234,7 +236,9 @@ class GoogleAdsConnector:
                         'Keyword': row.ad_group_criterion.keyword.text,
                         'Impressions': row.metrics.impressions,
                         'Clicks': row.metrics.clicks,
-                        'Spend': row.metrics.cost_micros / 1000000
+                        'Spend': row.metrics.cost_micros / 1000000,
+                        'Conversions': row.metrics.conversions,
+                        'ConversionValue': row.metrics.conversions_value
                     })
             return pd.DataFrame(data)
         except Exception as e:

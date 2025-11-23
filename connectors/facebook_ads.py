@@ -8,7 +8,8 @@ class FacebookAdsConnector:
         self.credentials = credentials
         self.use_mock = use_mock
 
-    def get_data(self, start_date, end_date):
+    @st.cache_data(ttl=3600)
+    def get_data(_self, start_date, end_date):
         if self.use_mock:
             return self._get_mock_data(start_date, end_date)
         else:
@@ -142,7 +143,8 @@ class FacebookAdsConnector:
             st.error(f"Failed to fetch Facebook Ads data: {e}")
             return pd.DataFrame()
 
-    def get_breakdown_data(self, start_date, end_date, breakdown='region'):
+    @st.cache_data(ttl=3600)
+    def get_breakdown_data(_self, start_date, end_date, breakdown='region'):
         """
         Fetches data broken down by a specific dimension.
         Supported breakdowns: 'region', 'publisher_platform', 'platform_position' (placement)
@@ -203,7 +205,7 @@ class FacebookAdsConnector:
             params = {
                 'time_range': {'since': start_date.strftime('%Y-%m-%d'), 'until': end_date.strftime('%Y-%m-%d')},
                 'level': 'account', # Aggregate at account level for breakdown
-                'time_increment': 1,
+                # 'time_increment': 1, # REMOVED to reduce API load
                 'breakdowns': [api_breakdown]
             }
 
@@ -222,7 +224,8 @@ class FacebookAdsConnector:
             st.error(f"Failed to fetch breakdown data ({breakdown}): {e}")
             return pd.DataFrame()
 
-    def get_ad_set_data(self, start_date, end_date):
+    @st.cache_data(ttl=3600)
+    def get_ad_set_data(_self, start_date, end_date):
         """
         Fetches Ad Set level data.
         """
@@ -275,7 +278,7 @@ class FacebookAdsConnector:
             params = {
                 'time_range': {'since': start_date.strftime('%Y-%m-%d'), 'until': end_date.strftime('%Y-%m-%d')},
                 'level': 'adset',
-                'time_increment': 1,
+                # 'time_increment': 1, # REMOVED to reduce API load
             }
 
             insights = account.get_insights(fields=fields, params=params)
@@ -319,7 +322,8 @@ class FacebookAdsConnector:
             st.error(f"Failed to fetch Ad Set data: {e}")
             return pd.DataFrame()
 
-    def get_ad_data(self, start_date, end_date):
+    @st.cache_data(ttl=3600)
+    def get_ad_data(_self, start_date, end_date):
         """
         Fetches Ad level data (Creative).
         """
@@ -371,7 +375,7 @@ class FacebookAdsConnector:
             params = {
                 'time_range': {'since': start_date.strftime('%Y-%m-%d'), 'until': end_date.strftime('%Y-%m-%d')},
                 'level': 'ad',
-                'time_increment': 1,
+                # 'time_increment': 1, # REMOVED to reduce API load
             }
 
             insights = account.get_insights(fields=fields, params=params)
@@ -406,7 +410,8 @@ class FacebookAdsConnector:
             st.error(f"Failed to fetch Ad data: {e}")
             return pd.DataFrame()
 
-    def get_ad_urls(self):
+    @st.cache_data(ttl=3600)
+    def get_ad_urls(_self):
         """
         Fetches a mapping of Ad ID to Landing Page URL.
         Note: This requires fetching Ad Creatives.
@@ -444,7 +449,7 @@ class FacebookAdsConnector:
                 Ad.Field.creative
             ]
             # We fetch all ads (active and paused) to build the map
-            ads = account.get_ads(fields=fields, params={'limit': 500})
+            ads = account.get_ads(fields=fields, params={'limit': 100}) # Reduced limit to avoid 500 error
             
             ad_url_map = {}
             
@@ -464,7 +469,7 @@ class FacebookAdsConnector:
                 AdCreative.Field.call_to_action_type,
                 AdCreative.Field.asset_feed_spec # For dynamic creative
             ]
-            creatives = account.get_ad_creatives(fields=creative_fields, params={'limit': 500})
+            creatives = account.get_ad_creatives(fields=creative_fields, params={'limit': 100}) # Reduced limit
             
             creative_url_map = {}
             for creative in creatives:
