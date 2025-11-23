@@ -58,6 +58,20 @@ with st.spinner("Fetching Ad-level data..."):
     google_df, fb_df = load_ad_level_data(start_date, end_date, use_mock_data, google_creds, fb_creds)
     leads_df = load_lead_data(client_id)
 
+    # --- Debug Info ---
+    with st.expander("Debug Info (Click to Expand)", expanded=False):
+        st.write(f"**Selected Client ID:** {client_id}")
+        st.write(f"**Google Customer ID:** {google_creds.get('customer_id')}")
+        st.write(f"**Facebook Account ID:** {fb_creds.get('ad_account_id')}")
+        st.write(f"**Google Rows Fetched:** {len(google_df)}")
+        st.write(f"**Facebook Rows Fetched:** {len(fb_df)}")
+        if not google_df.empty:
+            st.write("Google Columns:", google_df.columns.tolist())
+            st.dataframe(google_df.head())
+        if not fb_df.empty:
+            st.write("Facebook Columns:", fb_df.columns.tolist())
+            st.dataframe(fb_df.head())
+
 # Merge
 # Note: merge_api_and_leads logic might need adjustment if it expects 'Ad Group ID' or 'Ad Set ID'
 # get_ad_data returns 'AdGroup' name but maybe not ID in all mock cases? 
