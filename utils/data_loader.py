@@ -44,7 +44,7 @@ def filter_data(df, start_date, end_date):
     mask = (df['Date'] >= start_date) & (df['Date'] <= end_date)
     return df.loc[mask]
 
-def load_client_data(client_id, start_date, end_date):
+def load_client_data(client_id, start_date, end_date, use_mock_data=False):
     """
     Helper to load data for a specific client by ID.
     Fetches client details and overrides credentials.
@@ -60,13 +60,15 @@ def load_client_data(client_id, start_date, end_date):
         
     # Load default credentials
     saved_creds = load_credentials()
-    g_creds = saved_creds.get("google", {}).copy()
-    f_creds = saved_creds.get("facebook", {}).copy()
+    g_creds = saved_creds.get("google", {})
+    f_creds = saved_creds.get("facebook", {})
     
     # Override with client specific IDs
     if client.get('google_id'):
+        g_creds = g_creds.copy()
         g_creds['customer_id'] = client['google_id']
     if client.get('meta_id'):
+        f_creds = f_creds.copy()
         f_creds['ad_account_id'] = client['meta_id']
         
-    return load_data(start_date, end_date, use_mock_data=False, google_creds=g_creds, fb_creds=f_creds)
+    return load_data(start_date, end_date, use_mock_data=use_mock_data, google_creds=g_creds, fb_creds=f_creds)

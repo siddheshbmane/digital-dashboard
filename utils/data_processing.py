@@ -432,14 +432,45 @@ def get_source_stage_data(lead_df):
     stage_data = lead_df.groupby(['Lead Stage', 'Source']).size().reset_index(name='Count')
     return stage_data
 
-def get_campaign_service_map(lead_df, service_col=None):
+def get_campaign_service_map(lead_df, service_col=None, regex_rules=None):
     """
     Creates a mapping from Campaign ID to Service/Product based on lead data.
     service_col: Optional column name to use for Service/Product.
+    regex_rules: Optional list of dicts [{'pattern': '...', 'service': '...'}]
     """
     if lead_df.empty:
         return {}
         
+    campaign_service_map = {}
+    
+    # 1. Regex Mapping (Priority)
+    # We need Campaign Name for this. lead_df usually has 'Campaign' or we might need to map ID to Name if not present.
+    if regex_rules and 'Campaign' in lead_df.columns:
+        import re
+        # Iterate over unique campaigns
+        # Ensure we have valid IDs
+        if 'Campaign ID' in lead_df.columns:
+            unique_campaigns = lead_df[['Campaign ID', 'Campaign']].drop_duplicates()
+            
+            for _, row in unique_campaigns.iterrows():
+                try:
+                    cid = int(row['Campaign ID'])
+                    cname = str(row['Campaign'])
+                    
+                    for rule in regex_rules:
+                        pattern = rule.get('pattern')
+                        service = rule.get('service')
+                        if pattern and service:
+                            try:
+                                if re.search(pattern, cname, re.IGNORECASE):
+                                    campaign_service_map[cid] = service
+                                    break # First match wins
+                            except re.error:
+                                continue # Skip invalid regex
+                except (ValueError, TypeError):
+                    continue
+
+    # 2. Column Mapping (Fallback)
     # Determine which column to use
     target_col = 'Service'
     if service_col and service_col in lead_df.columns:
@@ -449,22 +480,27 @@ def get_campaign_service_map(lead_df, service_col=None):
     elif 'Product' in lead_df.columns:
         target_col = 'Product'
     else:
-        return {}
+        # If no column and no regex matches so far, return what we have
+        return campaign_service_map
         
-    campaign_service_map = {}
     # Group by Campaign ID and find mode of Service
     if 'Campaign ID' in lead_df.columns:
         for cid, group in lead_df.groupby('Campaign ID'):
-            if not group[target_col].empty:
-                # Use mode (most frequent) service for this campaign
-                try:
+            try:
+                cid_int = int(cid)
+                # Skip if already mapped by regex
+                if cid_int in campaign_service_map:
+                    continue
+                    
+                if not group[target_col].empty:
+                    # Use mode (most frequent) service for this campaign
                     # Drop NA values before finding mode
                     valid_values = group[target_col].dropna()
                     if not valid_values.empty:
                         top_service = valid_values.mode()[0]
-                        campaign_service_map[int(cid)] = top_service
-                except (IndexError, ValueError):
-                    continue
+                        campaign_service_map[cid_int] = top_service
+            except (IndexError, ValueError, TypeError):
+                continue
                     
     return campaign_service_map
 
@@ -508,3 +544,54 @@ def get_service_performance_data(combined_df, service_map):
     service_stats['Pipeline Value'] = service_stats['ConversionValue'] 
     
     return service_stats
+
+def apply_qualification_rules(df, rules):
+    """
+    Applies complex qualification rules.
+    rules: List of dicts [{'field': '...', 'operator': '...', 'value': '...'}]
+    Returns a boolean Series indicating if a row matches ANY of the rules (OR logic).
+    """
+    if df.empty or not rules:
+        return pd.Series([False] * len(df), index=df.index)
+        
+    # Start with all False
+    qualified_mask = pd.Series([False] * len(df), index=df.index)
+    
+    for rule in rules:
+        field = rule.get('field')
+        operator = rule.get('operator')
+        value = rule.get('value')
+        
+        if not field or field not in df.columns:
+            continue
+            
+        try:
+            col = df[field]
+            
+            if operator == 'equals':
+                # Case insensitive comparison for strings
+                if pd.api.types.is_string_dtype(col):
+                    mask = col.astype(str).str.lower() == str(value).lower()
+                else:
+                    mask = col == value
+            elif operator == 'contains':
+                mask = col.astype(str).str.contains(str(value), case=False, na=False)
+            elif operator == 'greater_than':
+                mask = pd.to_numeric(col, errors='coerce') > float(value)
+            elif operator == 'less_than':
+                mask = pd.to_numeric(col, errors='coerce') < float(value)
+            elif operator == 'not_equals':
+                if pd.api.types.is_string_dtype(col):
+                    mask = col.astype(str).str.lower() != str(value).lower()
+                else:
+                    mask = col != value
+            else:
+                continue
+                
+            # OR logic: If matched this rule, mark as qualified
+            qualified_mask = qualified_mask | mask
+            
+        except Exception:
+            continue
+            
+    return qualified_mask

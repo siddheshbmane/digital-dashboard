@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import os
+from utils.data_processing import apply_qualification_rules
 
 # Page Config
 st.set_page_config(
@@ -178,6 +179,39 @@ if uploaded_file is not None:
             # --- Processing ---
             st.success("File validation successful!")
             
+            # --- Advanced Validation ---
+            validation_warnings = []
+            
+            # 1. Missing Campaign IDs
+            if 'Campaign ID' in df.columns:
+                # Check for NaN, 0, or -1 (after potential extraction/filling)
+                # Note: extraction happens before this, so we check the current state
+                missing_cid = pd.to_numeric(df['Campaign ID'], errors='coerce').fillna(0).eq(0) | \
+                              pd.to_numeric(df['Campaign ID'], errors='coerce').eq(-1)
+                missing_count = missing_cid.sum()
+                if missing_count > 0:
+                    pct = (missing_count / len(df)) * 100
+                    if pct > 5: # Warn if > 5% missing
+                        validation_warnings.append(f"⚠️ **Missing Campaign IDs**: {missing_count} rows ({pct:.1f}%) are missing Campaign IDs. These leads won't be attributed to campaigns.")
+
+            # 2. Duplicate Leads
+            # Try to find a unique identifier
+            unique_cols = [c for c in df.columns if 'lead' in c.lower() and 'id' in c.lower()] # e.g. Lead ID
+            if not unique_cols:
+                unique_cols = [c for c in df.columns if 'email' in c.lower() or 'phone' in c.lower()]
+            
+            if unique_cols:
+                # Use the first one found as primary key for check
+                pk = unique_cols[0]
+                duplicates = df[pk].duplicated().sum()
+                if duplicates > 0:
+                    validation_warnings.append(f"⚠️ **Duplicate Leads**: Found {duplicates} duplicate entries based on column '{pk}'.")
+            
+            if validation_warnings:
+                with st.expander("⚠️ Validation Warnings", expanded=True):
+                    for w in validation_warnings:
+                        st.markdown(w)
+            
             # Normalize Lead Stage for Selection
             df['Lead Stage Normalized'] = df['Lead Stage'].astype(str).str.strip().str.lower()
             unique_stages = sorted(df['Lead Stage Normalized'].unique().tolist())
@@ -241,13 +275,35 @@ if uploaded_file is not None:
                     id_summary_cols[2].metric("Ad IDs", (df['Ad ID'] > 0).sum())
                 
                 # Apply Qualification Logic
-                df['Is Qualified'] = df['Lead Stage Normalized'].isin(selected_stages)
+                stage_mask = df['Lead Stage Normalized'].isin(selected_stages)
+                
+                # Apply saved qualification rules
+                saved_qual_rules = current_client.get('qualification_rules', []) if current_client else []
+                rule_mask = apply_qualification_rules(df, saved_qual_rules)
+                
+                df['Is Qualified'] = stage_mask | rule_mask
                 
                 # Apply Service Mapping
+                # 1. Column Mapping
                 if service_col and service_col != "None":
                     df['Service'] = df[service_col].astype(str).str.strip()
                 else:
                     df['Service'] = "Unassigned"
+
+                # 2. Regex Mapping (Overwrite)
+                saved_regex_rules = current_client.get('service_regex_rules', []) if current_client else []
+                if saved_regex_rules and 'Campaign' in df.columns:
+                    import re
+                    for rule in saved_regex_rules:
+                        pattern = rule.get('pattern')
+                        service = rule.get('service')
+                        if pattern and service:
+                            try:
+                                # Apply regex to Campaign column
+                                mask = df['Campaign'].astype(str).str.contains(pattern, case=False, regex=True, na=False)
+                                df.loc[mask, 'Service'] = service
+                            except Exception:
+                                continue
 
                 # Save Config (if client selected)
                 if client_id:
@@ -339,9 +395,65 @@ if os.path.exists(LEADS_FILE):
                     key="update_service_col"
                 )
             
+            # 3. Regex Mapping (New Row)
+            st.markdown("---")
+            st.subheader("3. Advanced: Regex Service Mapping")
+            st.markdown("Map campaigns to services based on name patterns (Regex). **Priority over column mapping.**")
+            
+            current_rules = current_client.get('service_regex_rules', [])
+            # Convert to DF for editor
+            rules_df = pd.DataFrame(current_rules)
+            if rules_df.empty:
+                rules_df = pd.DataFrame(columns=['pattern', 'service'])
+            
+            edited_rules_df = st.data_editor(
+                rules_df,
+                num_rows="dynamic",
+                column_config={
+                    "pattern": st.column_config.TextColumn("Campaign Name Pattern (Regex)", help="e.g. '(?i)ppc' for case-insensitive 'ppc'"),
+                    "service": st.column_config.TextColumn("Service Name", help="Target Service Name")
+                },
+                use_container_width=True,
+                key="regex_rules_editor"
+            )
+            
+            # 4. Qualification Rules (New Row)
+            st.markdown("---")
+            st.subheader("4. Advanced: Qualification Rules")
+            st.markdown("Define additional rules to qualify leads. Leads matching **ANY** of these rules (or the selected stages) will be qualified.")
+            
+            current_qual_rules = current_client.get('qualification_rules', [])
+            qual_rules_df = pd.DataFrame(current_qual_rules)
+            if qual_rules_df.empty:
+                qual_rules_df = pd.DataFrame(columns=['field', 'operator', 'value'])
+            
+            # Get columns for dropdown if possible
+            field_options = list(existing_df.columns) if not existing_df.empty else []
+            
+            edited_qual_rules_df = st.data_editor(
+                qual_rules_df,
+                num_rows="dynamic",
+                column_config={
+                    "field": st.column_config.SelectboxColumn("Field", options=field_options, required=True),
+                    "operator": st.column_config.SelectboxColumn("Operator", options=["equals", "contains", "greater_than", "less_than", "not_equals"], required=True),
+                    "value": st.column_config.TextColumn("Value", required=True)
+                },
+                use_container_width=True,
+                key="qual_rules_editor"
+            )
+
             if st.button("Update Configuration"):
-                # 1. Apply Qualification
-                existing_df['Is Qualified'] = existing_df['Lead Stage Normalized'].isin(new_selected_stages)
+                # Get rules from editors
+                new_regex_rules = edited_rules_df.to_dict('records')
+                new_regex_rules = [r for r in new_regex_rules if r['pattern'] and r['service']]
+                
+                new_qual_rules = edited_qual_rules_df.to_dict('records')
+                new_qual_rules = [r for r in new_qual_rules if r['field'] and r['operator'] and r['value']]
+
+                # 1. Apply Qualification (Stages OR Rules)
+                stage_mask = existing_df['Lead Stage Normalized'].isin(new_selected_stages)
+                rule_mask = apply_qualification_rules(existing_df, new_qual_rules)
+                existing_df['Is Qualified'] = stage_mask | rule_mask
                 
                 # 2. Apply Service Mapping
                 if new_service_col and new_service_col != "None":
@@ -355,11 +467,15 @@ if os.path.exists(LEADS_FILE):
                     if new_service_col != "None":
                         config_update['service_column'] = new_service_col
                     
+                    # Get rules from editor
+                    config_update['service_regex_rules'] = new_regex_rules
+                    config_update['qualification_rules'] = new_qual_rules
+                    
                     success = update_client_config(client_id, config_update)
                     
                     if success:
                         st.success(f"✅ Configuration saved for client: {client_id}")
-                        st.info(f"**Saved Settings:**\n- Qualified Stages: {new_selected_stages}\n- Service Column: {new_service_col}")
+                        st.info(f"**Saved Settings:**\n- Qualified Stages: {new_selected_stages}\n- Service Column: {new_service_col}\n- Regex Rules: {len(new_regex_rules)}\n- Qual Rules: {len(new_qual_rules)}")
                         st.toast("Configuration updated!", icon="💾")
                     else:
                         st.error(f"Failed to save configuration for client: {client_id}")

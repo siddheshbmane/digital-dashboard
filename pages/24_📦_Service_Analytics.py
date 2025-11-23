@@ -26,6 +26,7 @@ with st.container():
         # Client Selector
         from utils.auth_helper import render_client_selector
         render_client_selector(key_suffix="_top")
+        use_mock_data = st.checkbox("Use Mock Data", value=False)
         
     with col2:
         # Date Range
@@ -58,7 +59,7 @@ start_date, end_date = date_range
 # --- Data Loading ---
 with st.spinner("Fetching Service Data..."):
     # Load API Data
-    google_df, fb_df = load_client_data(client_id, start_date, end_date)
+    google_df, fb_df = load_client_data(client_id, start_date, end_date, use_mock_data=use_mock_data)
     
     # Load Lead Data (Essential for Service Mapping)
     leads_df = load_lead_data(client_id)
@@ -80,6 +81,7 @@ from utils.client_manager import get_active_clients, update_client_config
 active_clients = get_active_clients()
 current_client = next((c for c in active_clients if c['id'] == client_id), None)
 current_service_col = current_client.get('service_column') if current_client else None
+current_regex_rules = current_client.get('service_regex_rules') if current_client else None
 
 with st.expander("Configuration", expanded=False):
     st.write("Configure which column in your uploaded leads represents the Service or Product.")
@@ -117,13 +119,13 @@ with st.expander("Configuration", expanded=False):
 
 # 1. Get Service Map from Leads
 # Use the configured column if available
-service_map = get_campaign_service_map(leads_df, service_col=current_service_col)
+service_map = get_campaign_service_map(leads_df, service_col=current_service_col, regex_rules=current_regex_rules)
 
 if not service_map:
     if current_service_col:
         st.warning(f"Configuration set to '{current_service_col}', but no valid mapping found. Checking default columns...")
         # Try default fallback
-        service_map = get_campaign_service_map(leads_df)
+        service_map = get_campaign_service_map(leads_df, regex_rules=current_regex_rules)
         
     if not service_map:
         st.info("No Service/Product mapping found in lead data. Showing data by Campaign Name instead.")

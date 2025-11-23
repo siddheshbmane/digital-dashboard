@@ -587,3 +587,71 @@ All three report features (FR-019, FR-021, FR-023) are complete and functional. 
 - ✅ Configuration persistence working correctly with better user feedback
 
 **Status:** ✅ All implementation complete and verified
+
+---
+
+# Session 4: Ad Performance & Service Configuration (2025-11-23)
+
+## Issues Addressed
+
+### 1. Individual Ad Performance Fix
+**Problem:** The "Individual Ad Performance" page was showing "No Ad-level data available" and displaying numeric indices instead of Ad Names.
+**Solution:**
+- Updated `GoogleAdsConnector` and `FacebookAdsConnector` to explicitly fetch and return `Ad Name` and `Ad ID`.
+- Updated `pages/22_📢_Ad_Performance.py` to correctly reference the `Ad Name` column for display.
+- Added a "Debug Info" section to help troubleshoot data issues.
+
+### 2. Service Analytics Configuration
+**Problem:** Service Analytics was hardcoded or relying on default column names, making it inflexible for different clients.
+**Solution:**
+- Added a "Configuration" section to `pages/24_📦_Service_Analytics.py`.
+- Allows users to select a specific column from their uploaded lead data to represent the "Service" or "Product".
+- Saves this configuration per client in `clients.json`.
+- Updated `utils/data_processing.py` to use the configured column for mapping.
+
+### 3. Geographic Analysis Improvements
+**Problem:** `KeyError: 'ConversionValue'` and missing demographic data.
+**Solution:**
+- Updated `GoogleAdsConnector` to fetch conversion metrics for geographic views.
+- Implemented Age and Gender demographic data fetching and display.
+- Added logic to resolve `geoTargetConstants` to human-readable location names (e.g., "New York").
+
+## Summary
+The dashboard is now fully functional with robust Ad Performance tracking and flexible Service Analytics.
+- ✅ Ad Performance page works correctly with real names.
+- ✅ Service Analytics is configurable per client.
+- ✅ Geographic Analysis includes demographics and readable locations.
+
+**Status:** ✅ Session goals achieved.
+
+---
+
+# Session 5: Advanced Service Mapping & Qualification Rules (2025-11-24)
+
+## Issues Addressed
+
+### 1. Advanced Service Mapping (Regex)
+**Problem:** Simple column mapping wasn't flexible enough for campaigns that don't have a dedicated "Service" column but contain service names in the Campaign Name.
+**Solution:**
+- Implemented **Regex-based Service Mapping** in `utils/data_processing.py`.
+- Added a UI in `pages/5_📥_Lead_Upload.py` (Manage Lead Configuration) to define regex patterns and their corresponding Service names.
+- Updated `pages/24_📦_Service_Analytics.py` to respect these regex rules.
+
+### 2. Qualification Rules Engine
+**Problem:** Lead qualification was limited to selecting "Lead Stages". Clients needed more complex logic (e.g., "Source equals Organic").
+**Solution:**
+- Created `apply_qualification_rules` logic in `utils/data_processing.py` supporting operators (equals, contains, greater_than, less_than, not_equals).
+- Added a **Qualification Rules Editor** in `pages/5_📥_Lead_Upload.py`.
+- Leads are now qualified if they match the selected stages **OR** any of the qualification rules.
+
+### 3. Data Validation & Maintenance
+**Problem:** Users could upload bad data (missing IDs, duplicates) without warning. Redundant files cluttered the codebase.
+**Solution:**
+- Added **Data Validation** checks in `pages/5_📥_Lead_Upload.py` for missing Campaign IDs (>5%) and duplicate leads.
+- Added "Use Mock Data" toggle to `pages/24_📦_Service_Analytics.py` for easier testing.
+- Deleted redundant `pages/11_🏷️_Service_Performance.py`.
+
+## Summary
+The dashboard now supports advanced, client-specific configuration for mapping services and qualifying leads, along with robust data validation.
+
+**Status:** ✅ All planned enhancements complete.
